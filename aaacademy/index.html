@@ -1,0 +1,1630 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AAACADEMY – 25 жилийн турш Дэлхийн Ирээдүйг Бүтээж Байна</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Montserrat:wght@300;400;700;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --navy:   #0A2463;
+      --blue:   #1E90FF;
+      --white:  #FFFFFF;
+      --gold:   #FFD700;
+      --navy-light: #0d2d7a;
+      --glass-bg: rgba(255,255,255,0.07);
+      --glass-border: rgba(255,255,255,0.15);
+      --shadow-card: 0 20px 60px rgba(10,36,99,0.25);
+      --transition: 0.4s cubic-bezier(0.23,1,0.32,1);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--white);
+      color: #1a1a2e;
+      overflow-x: hidden;
+    }
+    h1,h2,h3,h4 { font-family: 'Cormorant Garamond', serif; }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--navy); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
+    /* ===== NAVBAR ===== */
+    #navbar {
+      position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+      padding: 1.2rem 5%;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: all 0.4s ease;
+      background: transparent;
+    }
+    #navbar.scrolled {
+      background: var(--navy);
+      padding: 0.8rem 5%;
+      box-shadow: 0 4px 30px rgba(10,36,99,0.5);
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem; font-weight: 700;
+      color: var(--white);
+      letter-spacing: 1px;
+    }
+    .nav-logo .logo-icon {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, var(--gold), #ffb300);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      box-shadow: 0 0 15px rgba(255,215,0,0.4);
+    }
+    .nav-logo span.accent { color: var(--gold); }
+    .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: rgba(255,255,255,0.9);
+      font-size: 0.82rem; font-weight: 700; letter-spacing: 0.5px;
+      text-transform: uppercase;
+      position: relative; padding-bottom: 4px;
+      transition: color 0.3s;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: 0; left: 0;
+      width: 0; height: 2px;
+      background: var(--gold);
+      transition: width 0.3s ease;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-cta {
+      background: var(--gold) !important;
+      color: var(--navy) !important;
+      padding: 0.5rem 1.2rem !important;
+      border-radius: 25px;
+      font-weight: 900 !important;
+      transition: all 0.3s !important;
+      box-shadow: 0 4px 15px rgba(255,215,0,0.3);
+    }
+    .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,215,0,0.5); }
+    .nav-cta::after { display: none !important; }
+    .hamburger {
+      display: none; flex-direction: column; gap: 5px; cursor: pointer;
+      z-index: 1100;
+    }
+    .hamburger span {
+      display: block; width: 26px; height: 2px;
+      background: var(--white); border-radius: 2px;
+      transition: all 0.3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+
+    /* ===== HERO SECTION ===== */
+    #hero {
+      position: relative; width: 100%; height: 100vh; min-height: 700px;
+      background: linear-gradient(135deg, #05102e 0%, #0A2463 50%, #0d3080 100%);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    #particle-canvas {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+    }
+    .hero-content {
+      position: relative; z-index: 5;
+      text-align: center; padding: 0 1rem;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,215,0,0.15);
+      border: 1px solid rgba(255,215,0,0.4);
+      color: var(--gold);
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 0.4rem 1.5rem;
+      border-radius: 20px;
+      margin-bottom: 1.5rem;
+      animation: fadeInDown 0.8s ease both;
+    }
+    .hero-title {
+      font-size: clamp(3rem, 9vw, 7rem);
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.05;
+      letter-spacing: -1px;
+      animation: fadeInUp 0.9s 0.2s ease both;
+      text-shadow: 0 0 80px rgba(30,144,255,0.5);
+    }
+    .hero-title .accent-gold { color: var(--gold); }
+    .hero-title .accent-blue { color: var(--blue); }
+    .hero-3d-text {
+      transform-style: preserve-3d;
+      display: inline-block;
+    }
+    .hero-tagline {
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(0.95rem, 2.2vw, 1.25rem);
+      font-weight: 300;
+      color: rgba(255,255,255,0.8);
+      margin: 1.2rem 0 2.5rem;
+      letter-spacing: 1.5px;
+      animation: fadeInUp 0.9s 0.4s ease both;
+    }
+    .hero-tagline span { color: var(--gold); font-weight: 700; }
+    .hero-btns {
+      display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+      animation: fadeInUp 0.9s 0.6s ease both;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue), #0070e0);
+      color: var(--white);
+      padding: 0.9rem 2.5rem;
+      border-radius: 50px;
+      font-weight: 700; font-size: 0.95rem; letter-spacing: 0.5px;
+      border: none; cursor: pointer;
+      box-shadow: 0 8px 30px rgba(30,144,255,0.4);
+      transition: all var(--transition);
+      position: relative; overflow: hidden;
+    }
+    .btn-primary::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--gold), #ffb300);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .btn-primary:hover { transform: translateY(-4px); box-shadow: 0 15px 40px rgba(30,144,255,0.5); }
+    .btn-primary:hover::before { opacity: 1; }
+    .btn-primary span { position: relative; z-index: 1; }
+    .btn-secondary {
+      background: transparent;
+      color: var(--white);
+      padding: 0.9rem 2.5rem;
+      border-radius: 50px;
+      font-weight: 700; font-size: 0.95rem;
+      border: 2px solid rgba(255,255,255,0.4);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .btn-secondary:hover {
+      border-color: var(--gold); color: var(--gold);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 30px rgba(255,215,0,0.2);
+    }
+    .hero-globe {
+      position: absolute; right: 8%; top: 50%; transform: translateY(-50%);
+      width: 280px; height: 280px;
+      animation: float 6s ease-in-out infinite;
+      opacity: 0.15; pointer-events: none;
+    }
+    .hero-scroll {
+      position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      color: rgba(255,255,255,0.5); font-size: 0.72rem; letter-spacing: 2px;
+      text-transform: uppercase;
+      animation: bounce 2s infinite;
+    }
+    .hero-scroll::after {
+      content: ''; width: 1px; height: 40px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
+    }
+    .floating-plane {
+      position: absolute; left: 6%; top: 35%;
+      font-size: 3rem; animation: flyPlane 8s ease-in-out infinite;
+      opacity: 0.3;
+    }
+
+    /* ===== SECTION BASE ===== */
+    section { padding: 6rem 5%; }
+    .section-label {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--blue);
+      margin-bottom: 0.8rem;
+    }
+    .section-title {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700; color: var(--navy);
+      margin-bottom: 1rem; line-height: 1.2;
+    }
+    .section-title span { color: var(--blue); }
+    .section-line {
+      width: 60px; height: 4px;
+      background: linear-gradient(to right, var(--gold), var(--blue));
+      border-radius: 2px; margin-bottom: 1.5rem;
+    }
+    .section-desc { color: #555; line-height: 1.8; max-width: 650px; font-size: 0.95rem; }
+
+    /* ===== FADE-IN ===== */
+    .fade-in { opacity: 0; transform: translateY(40px); transition: all 0.8s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .fade-in-left { opacity: 0; transform: translateX(-40px); transition: all 0.8s ease; }
+    .fade-in-left.visible { opacity: 1; transform: translateX(0); }
+    .fade-in-right { opacity: 0; transform: translateX(40px); transition: all 0.8s ease; }
+    .fade-in-right.visible { opacity: 1; transform: translateX(0); }
+
+    /* ===== ABOUT ===== */
+    #about { background: #f8faff; }
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 5rem; align-items: center;
+      max-width: 1200px; margin: 0 auto;
+    }
+    .about-visual {
+      position: relative; display: flex; justify-content: center;
+    }
+    .about-img-wrap {
+      position: relative; width: 100%; max-width: 460px;
+      padding-bottom: 1.5rem;
+    }
+    .about-img-box {
+      width: 100%; max-width: 460px;
+      border-radius: 20px; overflow: hidden;
+      position: relative;
+      box-shadow: 0 25px 60px rgba(10,36,99,0.2);
+      transform: perspective(1000px) rotateY(-8deg);
+      transition: transform 0.5s ease;
+    }
+    .about-img-box:hover { transform: perspective(1000px) rotateY(0deg); }
+    .about-img-box img { width: 100%; height: 400px; object-fit: cover; }
+    .about-badge {
+      position: absolute; bottom: -20px; right: -20px;
+      background: var(--gold);
+      color: var(--navy);
+      padding: 1.2rem 1.5rem;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(255,215,0,0.4);
+    }
+    .about-badge .num { font-family: 'Cormorant Garamond', serif; font-size: 2.5rem; font-weight: 900; line-height: 1; }
+    .about-badge .lbl { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.5px; }
+    .about-text p { color: #555; line-height: 1.9; margin-bottom: 1.2rem; font-size: 0.93rem; }
+    .about-features { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1.5rem; }
+    .feature-tag {
+      background: rgba(30,144,255,0.08);
+      border: 1px solid rgba(30,144,255,0.2);
+      color: var(--navy);
+      padding: 0.4rem 1rem;
+      border-radius: 20px; font-size: 0.82rem; font-weight: 700;
+    }
+
+    /* ===== STATS ===== */
+    .stats-bar {
+      background: linear-gradient(135deg, var(--navy) 0%, #0d3080 100%);
+      padding: 4rem 5%;
+    }
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 2rem; max-width: 1100px; margin: 0 auto; text-align: center;
+    }
+    .stat-item { padding: 1rem; }
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+      font-weight: 900; color: var(--gold);
+      line-height: 1; display: block;
+    }
+    .stat-label { color: rgba(255,255,255,0.8); font-size: 0.85rem; margin-top: 0.5rem; letter-spacing: 0.5px; }
+
+    /* ===== PROGRAMS ===== */
+    #programs { background: var(--white); }
+    .programs-header { text-align: center; max-width: 700px; margin: 0 auto 4rem; }
+    .programs-header .section-line { margin: 0 auto 1.5rem; }
+    .programs-header .section-desc { margin: 0 auto; }
+    .programs-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 2.5rem; max-width: 1100px; margin: 0 auto;
+    }
+    .program-card {
+      background: linear-gradient(135deg, #05102e 0%, var(--navy) 100%);
+      border-radius: 24px; padding: 3rem;
+      position: relative; overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.5s ease, box-shadow 0.5s ease;
+      transform-style: preserve-3d;
+      box-shadow: var(--shadow-card);
+    }
+    .program-card::before {
+      content: ''; position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      background: linear-gradient(135deg, rgba(30,144,255,0.1) 0%, rgba(255,215,0,0.05) 100%);
+      opacity: 0; transition: opacity 0.4s;
+    }
+    .program-card:hover { transform: perspective(1000px) rotateX(-5deg) rotateY(5deg) translateY(-10px); box-shadow: 0 40px 80px rgba(10,36,99,0.4); }
+    .program-card:hover::before { opacity: 1; }
+    .program-card .card-glow {
+      position: absolute; top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(circle at 50% 50%, rgba(30,144,255,0.08), transparent 60%);
+      opacity: 0; transition: opacity 0.4s;
+    }
+    .program-card:hover .card-glow { opacity: 1; }
+    .program-icon {
+      width: 65px; height: 65px;
+      background: linear-gradient(135deg, var(--gold), #ffb300);
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; margin-bottom: 1.8rem;
+      box-shadow: 0 8px 25px rgba(255,215,0,0.3);
+    }
+    .program-card h3 {
+      font-size: 1.5rem; font-weight: 700; color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+    .program-card .sub { color: var(--gold); font-size: 0.85rem; margin-bottom: 1.2rem; letter-spacing: 0.3px; }
+    .program-card p { color: rgba(255,255,255,0.7); line-height: 1.8; font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .program-features { list-style: none; }
+    .program-features li {
+      color: rgba(255,255,255,0.8); font-size: 0.88rem;
+      padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex; align-items: center; gap: 0.8rem;
+    }
+    .program-features li:last-child { border-bottom: none; }
+    .program-features li::before {
+      content: '✦'; color: var(--gold); font-size: 0.6rem; flex-shrink: 0;
+    }
+    .program-card .card-btn {
+      display: inline-block;
+      margin-top: 1.8rem;
+      padding: 0.7rem 1.8rem;
+      background: rgba(255,215,0,0.15);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      border-radius: 25px; font-weight: 700; font-size: 0.88rem;
+      transition: all 0.3s;
+    }
+    .program-card:hover .card-btn { background: var(--gold); color: var(--navy); }
+
+    /* ===== UNIVERSITIES ===== */
+    #universities { background: #f4f7ff; }
+    .uni-header { text-align: center; max-width: 700px; margin: 0 auto 4rem; }
+    .uni-header .section-line { margin: 0 auto 1.5rem; }
+    .uni-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem; max-width: 1200px; margin: 0 auto;
+    }
+    .uni-card {
+      background: var(--white);
+      border-radius: 20px; overflow: hidden;
+      box-shadow: 0 10px 40px rgba(10,36,99,0.1);
+      transition: all 0.5s ease;
+      transform-style: preserve-3d;
+      cursor: pointer;
+    }
+    .uni-card:hover {
+      transform: perspective(800px) rotateX(-5deg) translateY(-12px);
+      box-shadow: 0 35px 70px rgba(10,36,99,0.2);
+    }
+    .uni-img {
+      width: 100%; height: 190px; object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .uni-card:hover .uni-img { transform: scale(1.05); }
+    .uni-img-wrap { overflow: hidden; position: relative; }
+    .uni-rank {
+      position: absolute; top: 12px; right: 12px;
+      background: var(--gold);
+      color: var(--navy);
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px; font-size: 0.72rem; font-weight: 900;
+    }
+    .uni-body { padding: 1.5rem; }
+    .uni-chinese { font-size: 1.1rem; color: var(--blue); margin-bottom: 0.3rem; }
+    .uni-body h3 { font-size: 1.2rem; color: var(--navy); margin-bottom: 0.3rem; }
+    .uni-location { color: #888; font-size: 0.8rem; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 5px; }
+    .uni-body p { color: #666; font-size: 0.86rem; line-height: 1.7; }
+    .uni-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+    .uni-tag {
+      background: rgba(30,144,255,0.08); border: 1px solid rgba(30,144,255,0.2);
+      color: var(--blue); padding: 0.2rem 0.7rem;
+      border-radius: 12px; font-size: 0.72rem; font-weight: 700;
+    }
+
+    /* ===== BOOKING ===== */
+    #booking {
+      background: linear-gradient(135deg, var(--navy) 0%, #051040 100%);
+      position: relative; overflow: hidden;
+    }
+    #booking::before {
+      content: ''; position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231E90FF' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .booking-inner {
+      position: relative; z-index: 2;
+      max-width: 900px; margin: 0 auto;
+    }
+    .booking-header { text-align: center; margin-bottom: 3rem; }
+    .booking-header .section-label { color: var(--gold); }
+    .booking-header .section-title { color: var(--white); }
+    .booking-header .section-line { margin: 0 auto 1.5rem; }
+    .booking-header p { color: rgba(255,255,255,0.7); font-size: 0.93rem; }
+    .booking-form {
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 24px;
+      padding: 3rem;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .form-group label {
+      color: rgba(255,255,255,0.8); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.3px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      padding: 0.85rem 1.1rem;
+      color: var(--white);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.92rem;
+      outline: none;
+      transition: all 0.3s;
+      appearance: none;
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: rgba(255,255,255,0.35); }
+    .form-group select option { background: var(--navy); color: var(--white); }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--blue);
+      background: rgba(30,144,255,0.1);
+      box-shadow: 0 0 0 3px rgba(30,144,255,0.15);
+    }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+    .form-full { grid-column: 1 / -1; }
+    .submit-btn {
+      width: 100%; padding: 1rem;
+      background: linear-gradient(135deg, var(--gold), #ffb300);
+      color: var(--navy);
+      border: none; border-radius: 12px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem; font-weight: 700;
+      cursor: pointer; letter-spacing: 0.5px;
+      transition: all 0.4s ease;
+      position: relative; overflow: hidden;
+      margin-top: 0.5rem;
+    }
+    .submit-btn::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.3), transparent);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .submit-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(255,215,0,0.4); }
+    .submit-btn:hover::after { opacity: 1; }
+    .submit-btn:active { transform: translateY(0); }
+    .success-message {
+      display: none; text-align: center; padding: 2rem;
+    }
+    .success-message .icon { font-size: 3.5rem; margin-bottom: 1rem; }
+    .success-message h3 { font-size: 1.6rem; color: var(--gold); margin-bottom: 0.5rem; }
+    .success-message p { color: rgba(255,255,255,0.8); font-size: 0.93rem; }
+
+    /* ===== CONTACT ===== */
+    #contact { background: var(--white); }
+    .contact-grid {
+      display: grid; grid-template-columns: 1fr 1.3fr;
+      gap: 4rem; max-width: 1200px; margin: 0 auto;
+      align-items: start;
+    }
+    .contact-info-item {
+      display: flex; gap: 1.2rem;
+      margin-bottom: 2rem; align-items: flex-start;
+    }
+    .contact-icon-box {
+      width: 50px; height: 50px; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--navy), var(--blue));
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; color: var(--white);
+    }
+    .contact-info-item h4 { color: var(--navy); font-size: 0.88rem; font-weight: 700; margin-bottom: 0.3rem; letter-spacing: 0.3px; }
+    .contact-info-item p, .contact-info-item a { color: #666; font-size: 0.92rem; line-height: 1.6; }
+    .hours-grid { display: grid; gap: 0.3rem; }
+    .hours-row { display: flex; justify-content: space-between; color: #666; font-size: 0.88rem; padding: 0.3rem 0; border-bottom: 1px dashed #eee; gap: 1rem; }
+    .hours-row .day { font-weight: 700; color: var(--navy); white-space: nowrap; }
+    .map-frame {
+      width: 100%; height: 380px;
+      border-radius: 20px; overflow: hidden;
+      box-shadow: var(--shadow-card);
+      border: none;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: linear-gradient(135deg, #05102e 0%, var(--navy) 100%);
+      padding: 4rem 5% 2rem;
+    }
+    .footer-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem; max-width: 1200px; margin: 0 auto;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .footer-brand .nav-logo { font-size: 1.4rem; margin-bottom: 1rem; }
+    .footer-brand p { color: rgba(255,255,255,0.6); font-size: 0.88rem; line-height: 1.8; max-width: 280px; }
+    .footer-socials { display: flex; gap: 0.8rem; margin-top: 1.5rem; }
+    .social-btn {
+      width: 40px; height: 40px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.8); font-size: 0.9rem;
+      transition: all 0.3s; cursor: pointer;
+    }
+    .social-btn:hover { background: var(--gold); color: var(--navy); border-color: var(--gold); transform: translateY(-3px); }
+    .footer-col h4 { color: var(--white); font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; margin-bottom: 1.2rem; }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 0.6rem; }
+    .footer-col ul li a { color: rgba(255,255,255,0.6); font-size: 0.88rem; transition: color 0.3s; }
+    .footer-col ul li a:hover { color: var(--gold); }
+    .footer-bottom {
+      text-align: center; padding-top: 2rem;
+      color: rgba(255,255,255,0.45); font-size: 0.83rem;
+    }
+    .footer-bottom span { color: var(--gold); }
+
+    /* ===== ACCREDITATION STRIP ===== */
+    .accred-strip {
+      background: var(--white);
+      padding: 2.2rem 5%;
+      border-bottom: 1px solid #eef2ff;
+    }
+    .accred-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: center;
+      gap: 0; flex-wrap: wrap;
+    }
+    .accred-label {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: #aab;
+      margin-right: 2.5rem; white-space: nowrap;
+    }
+    .accred-badges {
+      display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; justify-content: center;
+    }
+    .accred-badge {
+      display: flex; align-items: center; gap: 0.85rem;
+      padding: 0.75rem 1.4rem;
+      border-radius: 12px;
+      border: 1.5px solid;
+      transition: all 0.3s;
+      cursor: default;
+    }
+    .accred-badge.sg {
+      border-color: #d63031;
+      background: rgba(214,48,49,0.04);
+    }
+    .accred-badge.cn {
+      border-color: #e17055;
+      background: rgba(225,112,85,0.04);
+    }
+    .accred-badge.mo {
+      border-color: var(--blue);
+      background: rgba(30,144,255,0.05);
+    }
+    .accred-badge:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+    .accred-flag { font-size: 1.6rem; line-height: 1; }
+    .accred-text { display: flex; flex-direction: column; }
+    .accred-text .a-title {
+      font-size: 0.78rem; font-weight: 900; letter-spacing: 0.3px;
+      color: var(--navy); line-height: 1.2;
+    }
+    .accred-text .a-sub {
+      font-size: 0.68rem; color: #888; letter-spacing: 0.2px; margin-top: 1px;
+    }
+    .accred-divider {
+      width: 1px; height: 36px;
+      background: #e0e6f0; margin: 0 0.5rem;
+    }
+
+    /* ===== ACCRED BADGES IN ABOUT ===== */
+    .about-accred {
+      display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1.8rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #e8eef8;
+    }
+    .about-accred-item {
+      display: flex; align-items: center; gap: 0.6rem;
+      background: linear-gradient(135deg, #f0f5ff, #e8f0ff);
+      border: 1px solid rgba(10,36,99,0.12);
+      border-radius: 10px;
+      padding: 0.6rem 1rem;
+    }
+    .about-accred-item .flag { font-size: 1.3rem; }
+    .about-accred-item .txt { font-size: 0.78rem; font-weight: 700; color: var(--navy); line-height: 1.3; }
+    .about-accred-item .txt span { display: block; font-weight: 400; color: #666; font-size: 0.7rem; }
+
+    /* ===== TIME SLOTS ===== */
+    .time-slots {
+      display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.3rem;
+    }
+    .time-slot {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.85);
+      padding: 0.45rem 0.9rem;
+      border-radius: 8px; font-size: 0.88rem; font-weight: 700;
+      cursor: pointer; transition: all 0.25s;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .time-slot:hover { background: rgba(255,215,0,0.15); border-color: var(--gold); color: var(--gold); }
+    .time-slot.selected { background: var(--gold); border-color: var(--gold); color: var(--navy); }
+    .time-slot.booked { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); color: rgba(255,255,255,0.25); cursor: not-allowed; text-decoration: line-through; }
+    .booking-steps { display: flex; gap: 1rem; margin-bottom: 2rem; justify-content: center; flex-wrap: wrap; }
+    .booking-step { display: flex; align-items: center; gap: 0.5rem; color: rgba(255,255,255,0.4); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.5px; }
+    .booking-step.active { color: var(--gold); }
+    .booking-step .step-num { width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 0.78rem; }
+    .booking-step.active .step-num { background: var(--gold); border-color: var(--gold); color: var(--navy); }
+
+    /* ===== UNIVERSITY LOGO HEADER ===== */
+    .uni-logo-header {
+      width: 100%; height: 190px;
+      background: linear-gradient(145deg, #05102e 0%, var(--navy) 55%, #0d3080 100%);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 0.7rem; position: relative; overflow: hidden;
+    }
+    .uni-logo-header::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at 50% 40%, rgba(255,215,0,0.08) 0%, transparent 65%);
+    }
+    .uni-logo-icon {
+      width: 80px; height: 80px;
+      object-fit: contain; position: relative; z-index: 1;
+      filter: drop-shadow(0 4px 16px rgba(255,215,0,0.35));
+    }
+    .uni-logo-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.55rem; color: var(--gold);
+      position: relative; z-index: 1; letter-spacing: 3px;
+      text-align: center; padding: 0 1rem;
+      text-shadow: 0 0 24px rgba(255,215,0,0.45);
+    }
+    .uni-logo-flag {
+      font-size: 3.5rem; position: relative; z-index: 1;
+    }
+
+    /* ===== KEYFRAMES ===== */
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(-50%) translateX(0); }
+      50% { transform: translateY(calc(-50% - 20px)) translateX(10px); }
+    }
+    @keyframes bounce {
+      0%,100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-8px); }
+    }
+    @keyframes flyPlane {
+      0%,100% { transform: translate(0,0) rotate(-10deg); }
+      30% { transform: translate(30px,-15px) rotate(-5deg); }
+      70% { transform: translate(-10px,10px) rotate(-15deg); }
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 992px) {
+      .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .about-img-wrap { max-width: 100%; }
+      .about-img-box { max-width: 100%; transform: none; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .programs-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .hero-globe { display: none; }
+    }
+    @media (max-width: 768px) {
+      section { padding: 4rem 5%; }
+      .nav-links { display: none; flex-direction: column; position: fixed; inset: 0; background: var(--navy); align-items: center; justify-content: center; gap: 2rem; z-index: 999; }
+      .nav-links.open { display: flex; }
+      .nav-links a { font-size: 1.1rem; }
+      .hamburger { display: flex; }
+      .form-row { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    }
+    @media (max-width: 480px) {
+      .hero-btns { flex-direction: column; align-items: center; }
+      .btn-primary, .btn-secondary { width: 100%; max-width: 280px; text-align: center; }
+      .booking-form { padding: 1.5rem; }
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">
+    <div class="logo-icon">✈</div>
+    <span>AAA<span class="accent">CADEMY</span></span>
+  </a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#hero">Нүүр</a></li>
+    <li><a href="#about">Бидний тухай</a></li>
+    <li><a href="#programs">Хөтөлбөрүүд</a></li>
+    <li><a href="#universities">Их сургуулиуд</a></li>
+    <li><a href="#booking">Зөвлөгөө авах</a></li>
+    <li><a href="#contact">Холбоо барих</a></li>
+    <li><a href="#booking" class="nav-cta">Үнэгүй зөвлөгөө</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section id="hero">
+  <canvas id="particle-canvas"></canvas>
+  <div class="floating-plane">✈</div>
+
+  <svg class="hero-globe" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="100" cy="100" r="90" fill="none" stroke="#1E90FF" stroke-width="1.5" opacity="0.6"/>
+    <ellipse cx="100" cy="100" rx="50" ry="90" fill="none" stroke="#1E90FF" stroke-width="1" opacity="0.4"/>
+    <ellipse cx="100" cy="100" rx="90" ry="30" fill="none" stroke="#1E90FF" stroke-width="1" opacity="0.4"/>
+    <line x1="10" y1="100" x2="190" y2="100" stroke="#1E90FF" stroke-width="1" opacity="0.3"/>
+    <line x1="100" y1="10" x2="100" y2="190" stroke="#1E90FF" stroke-width="1" opacity="0.3"/>
+    <circle cx="100" cy="100" r="90" fill="none" stroke="#FFD700" stroke-width="0.5" stroke-dasharray="4 8" opacity="0.3"/>
+  </svg>
+
+  <div class="hero-content">
+    <div class="hero-badge">✦ Монгол улсын тэргүүний гадаадад суралцах зөвлөх байгууллага · Сингапур & Хятадад итгэмжлэгдсэн ✦</div>
+    <h1 class="hero-title">
+      <span class="hero-3d-text">
+        <span class="accent-gold">AAA</span><span class="accent-blue">CADEMY</span>
+      </span>
+    </h1>
+    <p class="hero-tagline"><span>25 жилийн</span> турш Дэлхийн Ирээдүйг Бүтээж Байна</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="document.getElementById('booking').scrollIntoView({behavior:'smooth'})">
+        <span>✦ Үнэгүй Зөвлөгөө Авах</span>
+      </button>
+      <button class="btn-secondary" onclick="document.getElementById('programs').scrollIntoView({behavior:'smooth'})">
+        Хөтөлбөрүүд үзэх
+      </button>
+    </div>
+  </div>
+  <div class="hero-scroll">Доош гүйлгэх</div>
+</section>
+
+<!-- ===== ACCREDITATION STRIP ===== -->
+<div class="accred-strip">
+  <div class="accred-inner">
+    <div class="accred-label">Итгэмжлэгдсэн</div>
+    <div class="accred-badges">
+      <div class="accred-badge sg">
+        <div class="accred-flag">🇸🇬</div>
+        <div class="accred-text">
+          <span class="a-title">CPE — Сингапур</span>
+          <span class="a-sub">Committee for Private Education</span>
+        </div>
+      </div>
+      <div class="accred-divider"></div>
+      <div class="accred-badge cn">
+        <div class="accred-flag">🇨🇳</div>
+        <div class="accred-text">
+          <span class="a-title">MOE — Хятад</span>
+          <span class="a-sub">Ministry of Education of China · 教育部</span>
+        </div>
+      </div>
+      <div class="accred-divider"></div>
+      <div class="accred-badge mo">
+        <div class="accred-flag">🇲🇳</div>
+        <div class="accred-text">
+          <span class="a-title">Монгол улсад бүртгэлтэй</span>
+          <span class="a-sub">Боловсрол, Шинжлэх Ухааны Яам</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ABOUT ===== -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-visual fade-in-left">
+      <div class="about-img-wrap">
+        <div class="about-img-box">
+          <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&q=80" alt="Их сургуулийн кампус" loading="lazy" width="600" height="400" />
+        </div>
+        <div class="about-badge">
+          <div class="num">25</div>
+          <div class="lbl">Жилийн<br>Туршлага</div>
+        </div>
+      </div>
+    </div>
+    <div class="about-text fade-in-right">
+      <div class="section-label">Бид хэн бэ</div>
+      <h2 class="section-title">Монгол улсын <span>Итгэмжлэгдсэн</span> Гадаадад Суралцах Зөвлөх</h2>
+      <div class="section-line"></div>
+      <p>25 гаруй жилийн турш AAACADEMY нь хөөрхийлөлтэй Монгол оюутнуудыг Хятад болон АНУ-ын дэлхийн тэргүүний их сургуулиудтай холбох гүүр болж ирсэн. Улаанбаатарт суурилсан бид Сингапурын CPE болон Хятадын Боловсролын Яам (教育部)-д албан ёсоор итгэмжлэгдсэн цорын ганц Монголын зөвлөх байгууллага юм.</p>
+      <p>Туршлагатай зөвлөхүүдийн баг болон Бээжин, Шанхай дахь тэргүүний их сургуулиудтай байгуулсан хамтын ажиллагааны хүрээнд бид оюутан бүрийг хэлний бэлтгэлээс эхлэн дипломоо авах хүртэл дэмжиж, чиглүүлдэг.</p>
+      <p>1,500 гаруй оюутан амжилттай байршуулсан бидний туршлага нь манай байгууллагын өндөр чанар, шударга байдал, хувь хүнд чиглэсэн зөвлөгөөний гэрч юм.</p>
+      <div class="about-features">
+        <span class="feature-tag">✦ Улаанбаатарт суурилсан</span>
+        <span class="feature-tag">✦ Хятадын мэргэжилтнүүд</span>
+        <span class="feature-tag">✦ АНУ-д байршуулалт</span>
+        <span class="feature-tag">✦ Тэтгэлгийн дэмжлэг</span>
+        <span class="feature-tag">✦ Визний туслалцаа</span>
+        <span class="feature-tag">✦ Очсоны дараах дэмжлэг</span>
+      </div>
+      <div class="about-accred">
+        <div class="about-accred-item">
+          <span class="flag">🇸🇬</span>
+          <div class="txt">CPE — Сингапур итгэмжлэл<span>Committee for Private Education</span></div>
+        </div>
+        <div class="about-accred-item">
+          <span class="flag">🇨🇳</span>
+          <div class="txt">MOE — Хятадын Боловсролын Яам<span>中华人民共和国教育部</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-grid">
+    <div class="stat-item fade-in">
+      <span class="stat-num" data-target="25">0</span>
+      <div class="stat-label">Жилийн туршлага</div>
+    </div>
+    <div class="stat-item fade-in">
+      <span class="stat-num" data-target="1500">0</span>
+      <div class="stat-label">Оюутан амжилттай байршуулсан</div>
+    </div>
+    <div class="stat-item fade-in">
+      <span class="stat-num" data-target="80">0</span>
+      <div class="stat-label">Жил бүр оюутан</div>
+    </div>
+    <div class="stat-item fade-in">
+      <span class="stat-num" data-target="3">0</span>
+      <div class="stat-label">Очих улс орон</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PROGRAMS ===== -->
+<section id="programs">
+  <div class="programs-header fade-in">
+    <div class="section-label">Бидний санал болгох зүйл</div>
+    <h2 class="section-title">Манай <span>Хөтөлбөрүүд</span></h2>
+    <div class="section-line"></div>
+    <p class="section-desc">Хятад болон АНУ-ын тэргүүний их сургуулиудад элсэх боломжоо дээд зэргээр нэмэгдүүлэхийн тулд анхааралтай боловсруулсан эрдмийн замаас сонгоорой.</p>
+  </div>
+  <div class="programs-grid">
+    <div class="program-card fade-in-left">
+      <div class="card-glow"></div>
+      <div class="program-icon">📚</div>
+      <h3>Хэлний Бэлтгэл Хөтөлбөр</h3>
+      <div class="sub">Language Preparation Program</div>
+      <p>Тэргүүний их сургуулиудад амжилттай суралцахад бэлдэх цогц хэлний сургалт. Туршлагатай багш нар олон улсын хэлний шалгалтанд зориулсан эрчимжүүлсэн, чиглэлтэй бэлтгэл хангадаг.</p>
+      <ul class="program-features">
+        <li>Хятад (Мандарин) хэлний эрчимжүүлсэн курс</li>
+        <li>HSK 1–6 шалгалтын бэлтгэл</li>
+        <li>IELTS & TOEFL бэлтгэл (АНУ-д явах оюутнуудад)</li>
+        <li>Академик бичлэг болон илтгэх ур чадвар</li>
+        <li>Соёлын дүрэлзлийн хичээл</li>
+        <li>Жижиг ангийн хэмжээ — дээд тал нь 15 оюутан</li>
+      </ul>
+      <a href="#booking" class="card-btn">Бүртгүүлэх →</a>
+    </div>
+    <div class="program-card fade-in-right">
+      <div class="card-glow"></div>
+      <div class="program-icon">🎓</div>
+      <h3>1+4 Хөтөлбөр</h3>
+      <div class="sub">1+4 Program</div>
+      <p>Манай тэргүүлэх хөтөлбөр: Хятадад 1 жил хэл болон академик соёлыг эзэмшиж, дараа нь нэр хүндтэй Хятад эсвэл Америкийн их сургуульд 4 жилийн бакалаврын хөтөлбөрт шилжинэ.</p>
+      <ul class="program-features">
+        <li>Хятадад 1 жилийн эрчимжүүлсэн хэлний сургалт</li>
+        <li>4 жилийн бакалаврын хөтөлбөрт шууд элсэлт</li>
+        <li>Бээжингийн их сургууль & Фудань их сургуулийн зам</li>
+        <li>Засгийн газрын тэтгэлгийн боломж</li>
+        <li>Хувийн академик зөвлөх дэмжлэг</li>
+        <li>Орон байр & визний туслалцаа багтсан</li>
+      </ul>
+      <a href="#booking" class="card-btn">Бүртгүүлэх →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== UNIVERSITIES ===== -->
+<section id="universities">
+  <div class="uni-header fade-in">
+    <div class="section-label">Хамтрагч их сургуулиуд</div>
+    <h2 class="section-title">Дэлхийн тэргүүний <span>Их Сургуулиуд</span></h2>
+    <div class="section-line"></div>
+    <p class="section-desc">Бид Хятадын хамгийн нэр хүндтэй их сургуулиудтай хүчтэй хамтын ажиллагаа тогтоосон бөгөөд манай оюутнуудад гайхамшигт академик орчин болон дэлхийн карьерийн сүлжээнд нэвтрэх боломжийг олгодог.</p>
+  </div>
+  <div class="uni-grid">
+    <div class="uni-card fade-in">
+      <div class="uni-logo-header">
+        <img class="uni-logo-icon" src="https://upload.wikimedia.org/wikipedia/commons/f/f4/Peking_University_seal.svg" alt="PKU seal" />
+        <span class="uni-rank">Дэлхийн Top 20</span>
+      </div>
+      <div class="uni-body">
+        <div class="uni-chinese">北京大学</div>
+        <h3>Бээжингийн Их Сургууль</h3>
+        <p class="uni-location">📍 Бээжин, Хятад</p>
+        <p>Хятадын хамгийн нэр хүндтэй их сургуулиудын нэг бөгөөд дэлхийн тэргүүний байгууллагуудын жагсаалтад байнга ордог. Судалгаа, хүмүүнлэг болон шинжлэх ухаанаар алдартай.</p>
+        <div class="uni-tags">
+          <span class="uni-tag">Судалгаа</span>
+          <span class="uni-tag">Тэтгэлэг</span>
+          <span class="uni-tag">1+4 Хөтөлбөр</span>
+        </div>
+      </div>
+    </div>
+    <div class="uni-card fade-in">
+      <div class="uni-logo-header">
+        <img class="uni-logo-icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Fudan_University_Logo.svg/200px-Fudan_University_Logo.svg.png" alt="Fudan logo" />
+        <span class="uni-rank">Дэлхийн Top 50</span>
+      </div>
+      <div class="uni-body">
+        <div class="uni-chinese">复旦大学</div>
+        <h3>Фудань Их Сургууль</h3>
+        <p class="uni-location">📍 Шанхай, Хятад</p>
+        <p>Шанхайн зүрхэнд оршдог Фудань нь анагаах ухаан, эдийн засаг, олон улсын харилцааны чиглэлээр дэлхийд тэргүүлдэг. Хятадын хамгийн динамик хотод нэвтрэх гарц.</p>
+        <div class="uni-tags">
+          <span class="uni-tag">Бизнес</span>
+          <span class="uni-tag">Анагаах ухаан</span>
+          <span class="uni-tag">1+4 Хөтөлбөр</span>
+        </div>
+      </div>
+    </div>
+    <div class="uni-card fade-in">
+      <div class="uni-logo-header">
+        <img class="uni-logo-icon" src="https://upload.wikimedia.org/wikipedia/commons/e/ec/Tsinghua_University_Logo.svg" alt="Tsinghua logo" />
+        <span class="uni-rank">Дэлхийн Top 25</span>
+      </div>
+      <div class="uni-body">
+        <div class="uni-chinese">清华大学</div>
+        <h3>Цинхуагийн Их Сургууль</h3>
+        <p class="uni-location">📍 Бээжин, Хятад</p>
+        <p>Хятадын тэргүүний техник, инженерийн их сургууль бөгөөд MIT-тэй харьцуулагддаг. Инженерчлэл, шинжлэх ухаан, технологийн чиглэлээр дэлхийд нэр хүндтэй.</p>
+        <div class="uni-tags">
+          <span class="uni-tag">Инженерчлэл</span>
+          <span class="uni-tag">Технологи</span>
+          <span class="uni-tag">STEM</span>
+        </div>
+      </div>
+    </div>
+    <div class="uni-card fade-in">
+      <div class="uni-logo-header">
+        <img class="uni-logo-icon" src="https://upload.wikimedia.org/wikipedia/en/thumb/1/16/Zhejiang_University_Logo.svg/200px-Zhejiang_University_Logo.svg.png" alt="ZJU logo" />
+        <span class="uni-rank">Дэлхийн Top 75</span>
+      </div>
+      <div class="uni-body">
+        <div class="uni-chinese">浙江大学</div>
+        <h3>Жэжянгийн Их Сургууль</h3>
+        <p class="uni-location">📍 Ханжоу, Хятад</p>
+        <p>Хятадын хамгийн эртний, нэр хүндтэй их сургуулиудын нэг. Технологийн төв Ханжоу хотод оршдог бөгөөд хөдөө аж ахуй, инженерчлэл, амьдрах шинжлэх ухаанаар тэргүүлдэг.</p>
+        <div class="uni-tags">
+          <span class="uni-tag">Амьдрах шинжлэх ухаан</span>
+          <span class="uni-tag">Инновац</span>
+          <span class="uni-tag">Тэтгэлэг</span>
+        </div>
+      </div>
+    </div>
+    <div class="uni-card fade-in">
+      <div class="uni-logo-header">
+        <div class="uni-logo-flag">🇺🇸</div>
+        <span class="uni-rank">Олон янзын зэрэглэл</span>
+      </div>
+      <div class="uni-body">
+        <div class="uni-chinese">🇺🇸 Америк</div>
+        <h3>АНУ-ын Их Сургуулиуд</h3>
+        <p class="uni-location">📍 АНУ-ын янз бүрийн мужууд</p>
+        <p>AAACADEMY нь АНУ-ын магадлан итгэмжлэгдсэн их сургуулиудад элсэхэд дэмжлэг үзүүлж, TOEFL, SAT/ACT болон бүрэн бүртгэлийн үйл явцад цогц туслалцаа хангадаг.</p>
+        <div class="uni-tags">
+          <span class="uni-tag">TOEFL / SAT</span>
+          <span class="uni-tag">F-1 Виз</span>
+          <span class="uni-tag">Бүх хөтөлбөр</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ZUFE -->
+    <div class="uni-card fade-in">
+      <div class="uni-logo-header">
+        <div class="uni-logo-text">浙江财经大学</div>
+        <span class="uni-rank">Улсын 132-р байр</span>
+      </div>
+      <div class="uni-body">
+        <div class="uni-chinese">浙江财经大学</div>
+        <h3>Жэжянгийн Санхүү Эдийн Засгийн Их Сургууль</h3>
+        <p class="uni-location">📍 Ханжоу, Жэжян муж</p>
+        <p>Санхүү, эдийн засгийн чиглэлээр Хятадын тэргүүний их сургуулиудын нэг. 4 кампус, 45 бакалавр, 54 магистрын хөтөлбөртэй. Тэтгэлгийн хөтөлбөрт 30–70% хөнгөлөлт байдаг.</p>
+        <div class="uni-tags">
+          <span class="uni-tag">Санхүү</span>
+          <span class="uni-tag">Эдийн засаг</span>
+          <span class="uni-tag">Тэтгэлэг байгаа</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chongqing Jiaotong -->
+    <div class="uni-card fade-in">
+      <div class="uni-img-wrap">
+        <img class="uni-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/%E9%87%8D%E5%BA%86%E4%BA%A4%E9%80%9A%E5%A4%A7%E5%AD%A6%E5%8F%8C%E7%A6%8F%E6%A0%A1%E5%8C%BA_%E5%8D%97%E9%97%A8.jpg/800px-%E9%87%8D%E5%BA%86%E4%BA%A4%E9%80%9A%E5%A4%A7%E5%AD%A6%E5%8F%8C%E7%A6%8F%E6%A0%A1%E5%8C%BA_%E5%8D%97%E9%97%A8.jpg" alt="Чунцингийн Тээврийн Их Сургуулийн кампус" loading="lazy" />
+        <span class="uni-rank">1951 оноос</span>
+      </div>
+      <div class="uni-body">
+        <div class="uni-chinese">重庆交通大学</div>
+        <h3>Чунцингийн Тээврийн Их Сургууль</h3>
+        <p class="uni-location">📍 Чунцин хот</p>
+        <p>1951 онд байгуулагдсан тээврийн инженерчлэлд мэргэшсэн их сургууль. 15 докторын, 65 магистрын хөтөлбөртэй, 30,000 гаруй оюутантай. 9-р сар болон 3-р сард элсэлт авдаг.</p>
+        <div class="uni-tags">
+          <span class="uni-tag">Тээвэр</span>
+          <span class="uni-tag">Инженерчлэл</span>
+          <span class="uni-tag">3 / 9-р сар</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hangzhou Dianzi University -->
+    <div class="uni-card fade-in">
+      <div class="uni-logo-header">
+        <img class="uni-logo-icon" src="https://upload.wikimedia.org/wikipedia/en/thumb/9/9d/HDU_logo.svg/200px-HDU_logo.svg.png" alt="HDU logo" />
+        <span class="uni-rank">Дэлхийн 500–601</span>
+      </div>
+      <div class="uni-body">
+        <div class="uni-chinese">杭州电子科技大学</div>
+        <h3>Ханжоугийн Электроник Их Сургууль</h3>
+        <p class="uni-location">📍 Ханжоу, Жэжян муж</p>
+        <p>1956 онд үүсгэн байгуулагдсан, электроник мэдээллийн технологид тэргүүлэх их сургууль. Дэлхийн 500–601, улсын 97-р байр. Инженерчлэл, шинжлэх ухаан, эдийн засгийг хамарсан.</p>
+        <div class="uni-tags">
+          <span class="uni-tag">Электроник</span>
+          <span class="uni-tag">Технологи</span>
+          <span class="uni-tag">Есдүгээр сар</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hunan Institute of Engineering -->
+    <div class="uni-card fade-in">
+      <div class="uni-logo-header">
+        <div class="uni-logo-text">湖南工程学院</div>
+        <span class="uni-rank">Тэтгэлэг байгаа</span>
+      </div>
+      <div class="uni-body">
+        <div class="uni-chinese">湖南工程学院</div>
+        <h3>Хунаны Инженерийн Институт</h3>
+        <p class="uni-location">📍 Сяньтань, Хунан муж</p>
+        <p>Мао Зэдунгийн нутаг Сяньтань хотод байрлах мэргэжлийн хэрэглээний боловсролд чиглэсэн их сургууль. Тэтгэлгийн хөтөлбөрт элссэн оюутанд сургалтын төлбөрийг бүрэн чөлөөлдөг.</p>
+        <div class="uni-tags">
+          <span class="uni-tag">Инженерчлэл</span>
+          <span class="uni-tag">Тэтгэлэг: ҮНЭГҮЙ</span>
+          <span class="uni-tag">Есдүгээр сар</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Zaozhuang University -->
+    <div class="uni-card fade-in">
+      <div class="uni-img-wrap">
+        <img class="uni-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Mus%C3%A9e_Esperanto_Zaozhuang_Chine.jpg/800px-Mus%C3%A9e_Esperanto_Zaozhuang_Chine.jpg" alt="Заожуангийн Их Сургуулийн кампус" loading="lazy" />
+        <span class="uni-rank">Хамгийн хямд</span>
+      </div>
+      <div class="uni-body">
+        <div class="uni-chinese">枣庄学院</div>
+        <h3>Заожуангийн Их Сургууль</h3>
+        <p class="uni-location">📍 Заожуан, Шандун муж</p>
+        <p>Шандун мужид байрлах 32,000 гаруй оюутантай том их сургууль. Уран зохиол, инженерчлэл, менежментийн 68 хөтөлбөр санал болгодог.</p>
+        <div class="uni-tags">
+          <span class="uni-tag">Хэл ба уран зохиол</span>
+          <span class="uni-tag">Есдүгээр сар</span>
+          <span class="uni-tag">Есдүгээр сар</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== BOOKING ===== -->
+<section id="booking">
+  <div class="booking-inner">
+    <div class="booking-header fade-in">
+      <div class="section-label">Аяллаа эхлүүл</div>
+      <h2 class="section-title">Үнэгүй <span style="color:var(--gold)">Зөвлөгөөгөө Товлох</span></h2>
+      <div class="section-line"></div>
+      <p>Манай мэргэшсэн зөвлөхүүд таны олон улсын боловсролын аяллын алхам бүрт тань туслахад бэлэн. Өнөөдөр үнэгүй цаг товлоорой — ямар ч үүрэг хариуцлагагүй, зөвхөн тодорхой мэдээлэл авах.</p>
+    </div>
+    <div class="booking-form fade-in" id="booking-form-wrap">
+      <div class="booking-steps">
+        <div class="booking-step active"><div class="step-num">1</div> Огноо & Цаг</div>
+        <div class="booking-step"><div class="step-num">2</div> Мэдээлэл</div>
+        <div class="booking-step"><div class="step-num">3</div> Баталгаажуулалт</div>
+      </div>
+      <form id="booking-form" onsubmit="handleSubmit(event)" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="date">Огноо сонгох *</label>
+            <input type="date" id="date" name="date" required />
+          </div>
+          <div class="form-group">
+            <label>Цаг сонгох *</label>
+            <div class="time-slots" id="time-slots">
+              <button type="button" class="time-slot" data-time="09:00">09:00</button>
+              <button type="button" class="time-slot" data-time="10:00">10:00</button>
+              <button type="button" class="time-slot" data-time="11:00">11:00</button>
+              <button type="button" class="time-slot" data-time="14:00">14:00</button>
+              <button type="button" class="time-slot" data-time="15:00">15:00</button>
+              <button type="button" class="time-slot" data-time="16:00">16:00</button>
+              <button type="button" class="time-slot" data-time="17:00">17:00</button>
+            </div>
+            <input type="hidden" id="time" name="time" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fname">Бүтэн нэр *</label>
+            <input type="text" id="fname" name="fname" placeholder="Таны бүтэн нэр" required />
+          </div>
+          <div class="form-group">
+            <label for="phone">Утасны дугаар *</label>
+            <input type="tel" id="phone" name="phone" placeholder="+976 XXXX XXXX" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Имэйл хаяг *</label>
+            <input type="email" id="email" name="email" placeholder="your@email.com" required />
+          </div>
+          <div class="form-group">
+            <label for="program">Хөтөлбөрийн сонирхол</label>
+            <select id="program" name="program">
+              <option value="">Хөтөлбөр сонгох</option>
+              <option>Хэлний Бэлтгэл Хөтөлбөр</option>
+              <option>1+4 Хөтөлбөр (Хятад)</option>
+              <option>АНУ-ын Их Сургуульд Байршуулалт</option>
+              <option>Ерөнхий асуулга</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group form-full">
+            <label for="message">Мессеж / Нэмэлт тэмдэглэл</label>
+            <textarea id="message" name="message" placeholder="Боловсролын ар дэвсгэр, зорилго эсвэл асуултаа бидэнд хэлнэ үү..."></textarea>
+          </div>
+        </div>
+        <button type="submit" class="submit-btn">✦ Үнэгүй Зөвлөгөө Товлох</button>
+      </form>
+      <div class="success-message" id="success-msg">
+        <div class="icon">🎉</div>
+        <h3>Зөвлөгөө Амжилттай Товлогдлоо!</h3>
+        <p>Баярлалаа! Таны имэйлд баталгаажуулалт явуулсан. Бид тантай тогтоосон цагт холбогдох болно.</p>
+        <p style="margin-top:0.5rem; color:rgba(255,255,255,0.6); font-size:0.88rem;">Баталгаажуулалтыг имэйлдээ шалгаарай.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section id="contact">
+  <div style="max-width:1200px; margin:0 auto; margin-bottom:3rem;" class="fade-in">
+    <div class="section-label">Биднийг олоорой</div>
+    <h2 class="section-title">Холбоо барих &amp; <span>Байршил</span></h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="contact-grid">
+    <div class="fade-in-left">
+      <div class="contact-info-item">
+        <div class="contact-icon-box">📍</div>
+        <div>
+          <h4>Манай Оффис</h4>
+          <p>Улаанбаатар хот, Сүхбаатар дүүрэг<br>Энхтайваны өргөн чөлөө 13, Peace Mall</p>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-icon-box">📞</div>
+        <div>
+          <h4>Утас</h4>
+          <p><a href="tel:+97611001234">+976 1100 1234</a></p>
+          <p><a href="tel:+97699001234">+976 9900 1234</a> (WhatsApp)</p>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-icon-box">✉️</div>
+        <div>
+          <h4>Имэйл</h4>
+          <p><a href="mailto:info@aaacademy.mn">info@aaacademy.mn</a></p>
+          <p><a href="mailto:admissions@aaacademy.mn">admissions@aaacademy.mn</a></p>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="contact-icon-box">🕐</div>
+        <div>
+          <h4>Ажлын цаг</h4>
+          <div class="hours-grid">
+            <div class="hours-row"><span class="day">Даваа – Баасан</span><span>9:00 – 18:00</span></div>
+            <div class="hours-row"><span class="day">Бямба</span><span>9:00 – 16:00</span></div>
+            <div class="hours-row"><span class="day">Ням</span><span>Цаг товлосноор</span></div>
+            <div class="hours-row"><span class="day">Нийтийн баяр</span><span>Амарна</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fade-in-right">
+      <iframe
+        class="map-frame"
+        src="https://www.openstreetmap.org/export/embed.html?bbox=106.90%2C47.90%2C106.94%2C47.92&layer=mapnik&marker=47.9108%2C106.9203"
+        loading="lazy"
+        allowfullscreen
+        title="AAACADEMY байршил – Peace Mall, Улаанбаатар">
+      </iframe>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#hero" class="nav-logo">
+        <div class="logo-icon">✈</div>
+        <span>AAA<span class="accent">CADEMY</span></span>
+      </a>
+      <p>Улаанбаатар суурилсан, Сингапур & Хятадад итгэмжлэгдсэн гадаадад суралцах зөвлөх байгууллага — 25 жил. Хятадын тэргүүний их сургуулиудад байршуулалт, хэлний бэлтгэл болон оюутанд цогц дэмжлэг үзүүлэхэд мэргэшсэн.</p>
+      <div class="footer-socials">
+        <a class="social-btn" href="https://www.facebook.com/aaacademy.mn" target="_blank" rel="noopener" title="Facebook">f</a>
+        <a class="social-btn" href="https://www.instagram.com/aaacademy.mn" target="_blank" rel="noopener" title="Instagram">📷</a>
+        <a class="social-btn" href="#" title="WeChat">💬</a>
+        <a class="social-btn" href="https://www.linkedin.com/company/aaacademy" target="_blank" rel="noopener" title="LinkedIn">in</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Хурдан холбоосууд</h4>
+      <ul>
+        <li><a href="#hero">Нүүр</a></li>
+        <li><a href="#about">Бидний тухай</a></li>
+        <li><a href="#programs">Манай хөтөлбөрүүд</a></li>
+        <li><a href="#universities">Их сургуулиуд</a></li>
+        <li><a href="#booking">Зөвлөгөө товлох</a></li>
+        <li><a href="#contact">Холбоо барих</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Хөтөлбөрүүд</h4>
+      <ul>
+        <li><a href="#programs">Хэлний бэлтгэл</a></li>
+        <li><a href="#programs">1+4 хөтөлбөр</a></li>
+        <li><a href="#programs">HSK бэлтгэл</a></li>
+        <li><a href="#programs">IELTS / TOEFL</a></li>
+        <li><a href="#programs">АНУ-д байршуулалт</a></li>
+        <li><a href="#programs">Тэтгэлгийн зөвлөгөө</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Очих газрууд</h4>
+      <ul>
+        <li><a href="#universities">Бээжингийн их сургууль</a></li>
+        <li><a href="#universities">Фудань их сургууль</a></li>
+        <li><a href="#universities">Цинхуагийн их сургууль</a></li>
+        <li><a href="#universities">Жэжянгийн их сургууль</a></li>
+        <li><a href="#universities">АНУ-ын их сургуулиуд</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 <span>AAACADEMY</span>. <span>25 жилийн тэргүүлэх байдал</span>. Бүх эрх хуулиар хамгаалагдсан. | Монгол улсын тэргүүний гадаадад суралцах зөвлөх · Сингапур & Хятадад итгэмжлэгдсэн</p>
+  </div>
+</footer>
+
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+/* ---- PARTICLE CANVAS ---- */
+const canvas = document.getElementById('particle-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.vx = (Math.random() - 0.5) * 0.4;
+    this.vy = (Math.random() - 0.5) * 0.4 - 0.2;
+    this.radius = Math.random() * 2 + 0.5;
+    this.alpha = Math.random() * 0.6 + 0.1;
+    this.color = Math.random() > 0.7 ? '#FFD700' : '#1E90FF';
+  }
+  update() {
+    this.x += this.vx; this.y += this.vy;
+    this.alpha -= 0.0008;
+    if (this.alpha <= 0 || this.y < -10) this.reset();
+  }
+  draw() {
+    ctx.save();
+    ctx.globalAlpha = this.alpha;
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+function initParticles() {
+  particles = [];
+  const count = Math.min(Math.floor(canvas.width * canvas.height / 8000), 180);
+  for (let i = 0; i < count; i++) particles.push(new Particle());
+}
+
+function connectParticles() {
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 100) {
+        ctx.save();
+        ctx.globalAlpha = (1 - dist / 100) * 0.08;
+        ctx.strokeStyle = '#1E90FF';
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+  }
+}
+
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => { p.update(); p.draw(); });
+  connectParticles();
+  requestAnimationFrame(animateParticles);
+}
+
+resizeCanvas();
+initParticles();
+animateParticles();
+window.addEventListener('resize', () => { resizeCanvas(); initParticles(); });
+
+/* ---- 3D TILT ON HERO TITLE ---- */
+const heroTitle = document.querySelector('.hero-3d-text');
+document.getElementById('hero').addEventListener('mousemove', e => {
+  if (!heroTitle) return;
+  const rect = e.currentTarget.getBoundingClientRect();
+  const x = ((e.clientX - rect.left) / rect.width - 0.5) * 20;
+  const y = ((e.clientY - rect.top) / rect.height - 0.5) * -10;
+  heroTitle.style.transform = `perspective(600px) rotateX(${y}deg) rotateY(${x}deg)`;
+});
+document.getElementById('hero').addEventListener('mouseleave', () => {
+  if (heroTitle) heroTitle.style.transform = 'perspective(600px) rotateX(0) rotateY(0)';
+});
+
+/* ---- NAVBAR SCROLL ---- */
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+/* ---- HAMBURGER ---- */
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.getElementById('nav-links');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  navLinks.classList.toggle('open');
+});
+navLinks.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    hamburger.classList.remove('open');
+    navLinks.classList.remove('open');
+  });
+});
+
+/* ---- INTERSECTION OBSERVER ---- */
+function createObserver(selector) {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll(selector).forEach(el => observer.observe(el));
+}
+createObserver('.fade-in');
+createObserver('.fade-in-left');
+createObserver('.fade-in-right');
+
+/* ---- COUNTER ANIMATION ---- */
+function animateCounter(el, target, duration = 2000) {
+  const start = performance.now();
+  const update = (time) => {
+    const progress = Math.min((time - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const value = Math.round(eased * target);
+    el.textContent = (value >= 1000 ? value.toLocaleString() : value) + '+';
+    if (progress < 1) requestAnimationFrame(update);
+  };
+  requestAnimationFrame(update);
+}
+
+const statObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      animateCounter(entry.target, parseInt(entry.target.dataset.target, 10));
+      statObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.stat-num[data-target]').forEach(el => statObserver.observe(el));
+
+/* ---- 3D CARD HOVER ---- */
+function init3DCards(selector) {
+  document.querySelectorAll(selector).forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width - 0.5) * 18;
+      const y = ((e.clientY - rect.top) / rect.height - 0.5) * -18;
+      card.style.transform = `perspective(800px) rotateX(${y}deg) rotateY(${x}deg) translateY(-10px) scale(1.02)`;
+    });
+    card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+  });
+}
+init3DCards('.program-card');
+init3DCards('.uni-card');
+
+/* ---- PARALLAX HERO ---- */
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  const heroContent = document.querySelector('.hero-content');
+  if (heroContent && scrollY < window.innerHeight) {
+    heroContent.style.transform = `translateY(${scrollY * 0.35}px)`;
+    heroContent.style.opacity = 1 - scrollY / (window.innerHeight * 0.8);
+  }
+});
+
+/* ---- EMAILJS INIT ---- */
+emailjs.init('ecZVcjwzmbogyAO0K');
+
+/* ---- TIME SLOT SELECTOR ---- */
+document.querySelectorAll('.time-slot').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const date = document.getElementById('date').value;
+    if (!date) {
+      document.getElementById('date').style.borderColor = '#ff4757';
+      setTimeout(() => { document.getElementById('date').style.borderColor = ''; }, 2000);
+      return;
+    }
+    const key = 'booked_' + date + '_' + this.dataset.time;
+    if (localStorage.getItem(key)) return;
+    document.querySelectorAll('.time-slot').forEach(b => b.classList.remove('selected'));
+    this.classList.add('selected');
+    document.getElementById('time').value = this.dataset.time;
+  });
+});
+
+document.getElementById('date').addEventListener('change', function() {
+  const date = this.value;
+  document.querySelectorAll('.time-slot').forEach(btn => {
+    btn.classList.remove('selected', 'booked');
+    const key = 'booked_' + date + '_' + btn.dataset.time;
+    if (localStorage.getItem(key)) btn.classList.add('booked');
+  });
+  document.getElementById('time').value = '';
+});
+
+/* ---- FORM SUBMIT ---- */
+function handleSubmit(e) {
+  e.preventDefault();
+  const form = document.getElementById('booking-form');
+  const success = document.getElementById('success-msg');
+  const btn = form.querySelector('.submit-btn');
+
+  const name  = form.fname.value.trim();
+  const phone = form.phone.value.trim();
+  const email = form.email.value.trim();
+  const date  = form.date.value;
+  const time  = form.time.value;
+
+  if (!name || !phone || !email || !date || !time) {
+    form.querySelectorAll('input[required]').forEach(input => {
+      if (!input.value.trim()) {
+        input.style.borderColor = '#ff4757';
+        input.addEventListener('input', () => { input.style.borderColor = ''; }, { once: true });
+      }
+    });
+    if (!time) { alert('Цагаа сонгоно уу!'); }
+    return;
+  }
+
+  const slotKey = 'booked_' + date + '_' + time;
+  if (localStorage.getItem(slotKey)) {
+    alert('Уучлаарай, энэ цаг аль хэдийн захиалагдсан байна. Өөр цаг сонгоно уу.');
+    return;
+  }
+
+  btn.textContent = 'Илгээж байна...';
+  btn.disabled = true;
+
+  const params = {
+    from_name : name,
+    from_email: email,
+    email     : email,
+    phone     : phone,
+    date      : date,
+    time      : time,
+    program   : form.program.value || 'Заагаагүй',
+    message   : form.message.value || '',
+    reply_to  : email,
+    to_email  : email,
+    to_name   : name,
+  };
+
+  const SERVICE = 'service_2z863ak';
+
+  emailjs.send(SERVICE, 'template_7zvakga', params)
+  .then(() => emailjs.send(SERVICE, 'template_dxmravb', { ...params, to_email: params.email || params.from_email }))
+  .then(() => {
+    localStorage.setItem(slotKey, '1');
+    form.style.opacity = '0';
+    form.style.transform = 'scale(0.95)';
+    form.style.transition = 'all 0.4s ease';
+    setTimeout(() => {
+      form.style.display = 'none';
+      success.style.display = 'block';
+    }, 400);
+  })
+  .catch((err) => {
+    console.error('EmailJS алдаа:', err);
+    btn.textContent = '✦ Үнэгүй Зөвлөгөө Товлох';
+    btn.disabled = false;
+    btn.style.background = 'linear-gradient(135deg, #ff4757, #c0392b)';
+    setTimeout(() => { btn.style.background = ''; }, 3000);
+    alert('Алдаа: ' + (err.text || err.message || JSON.stringify(err)));
+  });
+}
+
+/* ---- MIN DATE ---- */
+const dateInput = document.getElementById('date');
+if (dateInput) {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  dateInput.min = tomorrow.toISOString().split('T')[0];
+}
+
+/* ---- ACTIVE NAV HIGHLIGHT ---- */
+const navAnchors = document.querySelectorAll('.nav-links a');
+const sectionObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navAnchors.forEach(a => {
+        a.style.color = a.getAttribute('href') === `#${id}` ? 'var(--gold)' : '';
+      });
+    }
+  });
+}, { threshold: 0.4 });
+document.querySelectorAll('section[id]').forEach(s => sectionObserver.observe(s));
+</script>
+</body>
+</html>
