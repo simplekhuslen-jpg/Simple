@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>N</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #ffd6e7; overflow: hidden; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <canvas id="c"></canvas>
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+  <script>
+    /* ── RENDERER ── */
+    const canvas = document.getElementById('c');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.setSize(innerWidth, innerHeight);
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.4;
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xffd6e7);
+    scene.fog = new THREE.FogExp2(0xffd6e7, 0.03);
+
+    const camera = new THREE.PerspectiveCamera(55, innerWidth / innerHeight, 0.1, 100);
+    camera.position.set(0, 0, 8);
+
+    /* ── LIGHTS ── */
+    scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+
+    const L1 = new THREE.PointLight(0xff69b4, 8, 25); L1.position.set(4, 4, 5);
+    const L2 = new THREE.PointLight(0xe040fb, 6, 25); L2.position.set(-4, -3, 4);
+    const L3 = new THREE.PointLight(0xffd700, 4, 20); L3.position.set(0, 6, -2);
+    scene.add(L1, L2, L3);
+
+    /* ── N LETTER (3 boxes) ── */
+    const BW = 0.62, H = 3.6, W = 2.5, DEP = 0.55;
+    const diagSpan = W - 2 * BW;
+    const diagLen  = Math.sqrt(diagSpan * diagSpan + H * H);
+    const diagAngle = Math.atan2(diagSpan, H);
+
+    const nMat = new THREE.MeshStandardMaterial({
+      color:             0xf4a0c0,
+      metalness:         0.85,
+      roughness:         0.12,
+      emissive:          0xff80aa,
+      emissiveIntensity: 0.18,
+    });
+
+    const nGroup = new THREE.Group();
+
+    const lBar = new THREE.Mesh(new THREE.BoxGeometry(BW, H, DEP), nMat);
+    lBar.position.x = -W / 2 + BW / 2;
+
+    const rBar = new THREE.Mesh(new THREE.BoxGeometry(BW, H, DEP), nMat);
+    rBar.position.x = W / 2 - BW / 2;
+
+    const diag = new THREE.Mesh(new THREE.BoxGeometry(BW * 0.9, diagLen, DEP), nMat);
+    diag.rotation.z = -diagAngle;
+
+    nGroup.add(lBar, rBar, diag);
+
+    /* subtle glow shell — slightly bigger, transparent */
+    const glowMat = new THREE.MeshStandardMaterial({
+      color: 0xff69b4, transparent: true, opacity: 0.08,
+      metalness: 0, roughness: 1, side: THREE.BackSide,
+    });
+    const glowGroup = new THREE.Group();
+    const sc = 1.12;
+    [lBar, rBar, diag].forEach(m => {
+      const g = new THREE.Mesh(m.geometry.clone(), glowMat);
+      g.position.copy(m.position);
+      g.rotation.copy(m.rotation);
+      g.scale.setScalar(sc);
+      glowGroup.add(g);
+    });
+
+    nGroup.add(glowGroup);
+    scene.add(nGroup);
+
+    /* ── GLITTER PARTICLES ── */
+    const PC = 1200;
+    const pp = new Float32Array(PC * 3);
+    for (let i = 0; i < PC; i++) {
+      pp[i * 3]     = (Math.random() - 0.5) * 18;
+      pp[i * 3 + 1] = (Math.random() - 0.5) * 14;
+      pp[i * 3 + 2] = (Math.random() - 0.5) * 10;
+    }
+    const pGeo = new THREE.BufferGeometry();
+    pGeo.setAttribute('position', new THREE.BufferAttribute(pp, 3));
+    scene.add(new THREE.Points(pGeo, new THREE.PointsMaterial({
+      color: 0xffd4e8, size: 0.045, transparent: true, opacity: 0.75,
+    })));
+
+    /* ── FLOATING STARS ── */
+    function makeStar(r) {
+      const s = new THREE.Shape();
+      const n = 5, ir = r * 0.42;
+      for (let i = 0; i < n * 2; i++) {
+        const a = (i * Math.PI) / n - Math.PI / 2;
+        const rad = i % 2 === 0 ? r : ir;
+        i === 0
+          ? s.moveTo(Math.cos(a) * rad, Math.sin(a) * rad)
+          : s.lineTo(Math.cos(a) * rad, Math.sin(a) * rad);
+      }
+      s.closePath();
+      return new THREE.ShapeGeometry(s);
+    }
+
+    const stars = [];
+    for (let i = 0; i < 18; i++) {
+      const size = 0.07 + Math.random() * 0.14;
+      const mesh = new THREE.Mesh(
+        makeStar(size),
+        new THREE.MeshBasicMaterial({
+          color: [0xffb6c1, 0xff69b4, 0xffd700, 0xffc0cb][Math.floor(Math.random() * 4)],
+          transparent: true, opacity: 0.5 + Math.random() * 0.4,
+        })
+      );
+      mesh.position.set(
+        (Math.random() - 0.5) * 14,
+        (Math.random() - 0.5) * 10,
+        (Math.random() - 0.5) * 6 - 1
+      );
+      mesh.userData = {
+        spinSpeed: (Math.random() - 0.5) * 0.04,
+        dx: (Math.random() - 0.5) * 0.008,
+        dy: (Math.random() - 0.5) * 0.006,
+      };
+      scene.add(mesh);
+      stars.push(mesh);
+    }
+
+    /* ── MOUSE PARALLAX ── */
+    let mx = 0, my = 0;
+    addEventListener('mousemove', e => {
+      mx = (e.clientX / innerWidth  - 0.5) * 2;
+      my = (e.clientY / innerHeight - 0.5) * 2;
+    });
+
+    /* ── ANIMATE ── */
+    let t = 0;
+    (function tick() {
+      requestAnimationFrame(tick);
+      t += 0.012;
+
+      /* N rotation */
+      nGroup.rotation.y  = t * 0.9;
+      nGroup.rotation.x  = Math.sin(t * 0.35) * 0.18;
+      nGroup.position.y  = Math.sin(t * 0.5) * 0.15;
+
+      /* Camera subtle parallax */
+      camera.position.x += (mx * 0.8 - camera.position.x) * 0.04;
+      camera.position.y += (-my * 0.5 - camera.position.y) * 0.04;
+      camera.lookAt(0, 0, 0);
+
+      /* Lights orbit */
+      L1.position.set(Math.sin(t * 0.7) * 6,  Math.cos(t * 0.5) * 4,  5);
+      L2.position.set(Math.cos(t * 0.5) * -5, Math.sin(t * 0.4) * 3,  3);
+      L3.position.set(Math.sin(t * 0.3) * 4,  6, Math.cos(t * 0.6) * 3);
+
+      /* Stars drift & spin */
+      stars.forEach(s => {
+        s.rotation.z += s.userData.spinSpeed;
+        s.position.x += s.userData.dx;
+        s.position.y += s.userData.dy;
+        if (Math.abs(s.position.x) > 8) s.userData.dx *= -1;
+        if (Math.abs(s.position.y) > 6) s.userData.dy *= -1;
+      });
+
+      renderer.render(scene, camera);
+    })();
+
+    /* ── RESIZE ── */
+    addEventListener('resize', () => {
+      camera.aspect = innerWidth / innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(innerWidth, innerHeight);
+    });
+  </script>
+</body>
+</html>

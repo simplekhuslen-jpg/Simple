@@ -1,0 +1,640 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --b1:#1565C0;--b2:#1976D2;--b3:#2196F3;--b4:#42A5F5;--b5:#BBDEFB;--b6:#E3F2FD;--b7:#F0F7FF;
+  --ink:#0D1B2A;--ink2:#2E4057;--ink3:#6B84A0;--ink4:#9BB5CF;
+  --white:#FFFFFF;--surf:#F4F8FD;--surf2:#EAF2FB;
+  --rad:14px;--rad-sm:8px;--rad-lg:20px;
+}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--surf);color:var(--ink);min-height:100vh;overflow-x:hidden}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@keyframes pulse3d{0%,100%{box-shadow:0 8px 24px rgba(21,101,192,0.3),0 2px 6px rgba(21,101,192,0.2)}50%{box-shadow:0 12px 32px rgba(21,101,192,0.45),0 4px 10px rgba(21,101,192,0.3)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes checkBounce{0%{transform:scale(0.5)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+@keyframes cardIn{from{opacity:0;transform:translateY(16px) scale(0.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+#app{max-width:680px;margin:0 auto}
+
+/* LOGIN */
+#login-screen{min-height:600px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;animation:fadeIn .6s ease}
+.login-orb{width:88px;height:88px;border-radius:24px;background:linear-gradient(135deg,var(--b2),var(--b4));display:flex;align-items:center;justify-content:center;font-size:38px;margin-bottom:20px;animation:float 3s ease-in-out infinite;box-shadow:0 16px 40px rgba(21,101,192,0.35),0 4px 12px rgba(21,101,192,0.2)}
+.login-title{font-family:'Fraunces',serif;font-size:32px;font-weight:600;color:var(--ink);margin-bottom:6px;letter-spacing:-0.5px}
+.login-sub{font-size:14px;color:var(--ink3);margin-bottom:36px}
+.login-card{background:var(--white);border-radius:var(--rad-lg);padding:28px;width:100%;max-width:360px;box-shadow:0 4px 24px rgba(21,101,192,0.1),0 1px 4px rgba(21,101,192,0.08)}
+.social-btn{display:flex;align-items:center;gap:12px;width:100%;padding:13px 18px;border:1.5px solid var(--b5);border-radius:var(--rad);background:var(--white);cursor:pointer;font-size:14px;font-weight:500;color:var(--ink2);margin-bottom:12px;transition:all 0.2s;font-family:'Plus Jakarta Sans',sans-serif}
+.social-btn:hover{border-color:var(--b3);background:var(--b6);transform:translateY(-1px);box-shadow:0 4px 12px rgba(21,101,192,0.15)}
+.social-icon{width:22px;height:22px;flex-shrink:0}
+.divider{display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--ink4);font-size:12px}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--b5)}
+.email-inp{width:100%;border:1.5px solid var(--b5);border-radius:var(--rad);padding:12px 14px;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;outline:none;color:var(--ink);margin-bottom:10px;transition:border-color 0.2s;background:var(--white)}
+.email-inp:focus{border-color:var(--b3)}
+.login-btn{width:100%;padding:13px;border:none;border-radius:var(--rad);background:linear-gradient(135deg,var(--b1),var(--b3));color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.2s;animation:pulse3d 2s ease-in-out infinite}
+.login-btn:hover{transform:translateY(-1px)}
+
+/* HEADER */
+.header{background:linear-gradient(160deg,var(--b1) 0%,var(--b2) 60%,var(--b3) 100%);padding:20px 20px 0;position:relative;overflow:hidden}
+.hdr-blob{position:absolute;border-radius:50%;opacity:0.12;pointer-events:none}
+.hdr-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;position:relative}
+.hdr-left{display:flex;align-items:center;gap:10px}
+.avatar{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:transform 0.2s}
+.avatar:hover{transform:scale(1.08)}
+.app-name-hdr{font-family:'Fraunces',serif;font-size:22px;color:#fff;font-weight:600;letter-spacing:-0.3px}
+.hdr-date{font-size:12px;color:rgba(255,255,255,0.7);text-align:right;line-height:1.4}
+.hdr-date span{display:block;font-size:16px;font-weight:600;color:#fff}
+.nav{display:flex;border-top:1px solid rgba(255,255,255,0.18);margin-top:8px;position:relative}
+.nav-btn{flex:1;padding:11px 4px;font-size:11px;color:rgba(255,255,255,0.6);cursor:pointer;text-align:center;border:none;background:none;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;letter-spacing:0.4px;text-transform:uppercase;transition:color 0.2s;position:relative}
+.nav-btn.act{color:#fff}
+.nav-indicator{position:absolute;bottom:0;height:3px;border-radius:2px 2px 0 0;background:#fff;transition:left 0.3s cubic-bezier(.4,0,.2,1),width 0.3s cubic-bezier(.4,0,.2,1)}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}
+.stat-card{border-radius:var(--rad);padding:14px 12px;text-align:center;position:relative;overflow:hidden;cursor:pointer;transition:transform 0.2s}
+.stat-card:hover{transform:translateY(-2px)}
+.stat-card.blue{background:linear-gradient(135deg,var(--b1),var(--b2));box-shadow:0 6px 20px rgba(21,101,192,0.3)}
+.stat-card.light{background:var(--white);box-shadow:0 2px 10px rgba(21,101,192,0.08)}
+.stat-num{font-family:'Fraunces',serif;font-size:26px;font-weight:600}
+.stat-card.blue .stat-num{color:#fff}
+.stat-card.light .stat-num{color:var(--b2)}
+.stat-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
+.stat-card.blue .stat-lbl{color:rgba(255,255,255,0.7)}
+.stat-card.light .stat-lbl{color:var(--ink3)}
+
+/* WEEK */
+.week-row{display:flex;gap:5px;margin-bottom:18px}
+.day-col{flex:1;text-align:center}
+.day-name{font-size:9px;font-weight:700;color:var(--ink4);text-transform:uppercase;letter-spacing:0.3px;margin-bottom:5px}
+.day-ring{width:34px;height:34px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;border:2px solid var(--b5);color:var(--ink3);transition:all 0.3s;background:var(--white)}
+.day-ring.done{background:var(--b2);border-color:var(--b2);color:#fff;box-shadow:0 4px 12px rgba(33,150,243,0.4)}
+.day-ring.today{border-color:var(--b3);color:var(--b2);background:var(--b6)}
+
+/* CONTENT */
+.content{padding:16px 16px 20px}
+
+/* HABITS */
+.sec-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.sec-title{font-family:'Fraunces',serif;font-size:16px;color:var(--ink);font-weight:600}
+.add-fab{background:linear-gradient(135deg,var(--b2),var(--b4));color:#fff;border:none;border-radius:20px;padding:7px 16px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all 0.2s;box-shadow:0 4px 12px rgba(33,150,243,0.3)}
+.add-fab:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(33,150,243,0.4)}
+
+.habit-card{display:flex;align-items:center;gap:11px;padding:13px 14px;background:var(--white);border:1.5px solid var(--b6);border-radius:var(--rad);margin-bottom:8px;cursor:pointer;transition:all 0.25s;animation:cardIn 0.35s ease both;position:relative;overflow:hidden}
+.habit-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px;background:var(--accent,var(--b4));transition:width 0.3s}
+.habit-card:hover{border-color:var(--b4);transform:translateX(2px) translateY(-1px);box-shadow:0 6px 20px rgba(33,150,243,0.1)}
+.habit-card.done-card{border-color:var(--b5);background:var(--b6)}
+.habit-card.done-card::before{width:4px}
+.hc-check{width:28px;height:28px;border-radius:8px;border:2px solid var(--b4);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.25s;background:var(--white)}
+.hc-check.chk{background:var(--b2);border-color:var(--b2);animation:checkBounce 0.3s ease}
+.hc-check.chk::after{content:'✓';color:#fff;font-size:13px;font-weight:700}
+.hc-emoji{font-size:20px;width:30px;text-align:center;flex-shrink:0}
+.hc-body{flex:1;min-width:0}
+.hc-name{font-size:14px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color 0.2s}
+.done-card .hc-name{color:var(--ink3);text-decoration:line-through}
+.hc-meta{font-size:11px;color:var(--ink3);margin-top:1px}
+.hc-streak{font-size:12px;color:var(--b2);font-weight:600;white-space:nowrap}
+.del-btn{width:28px;height:28px;border-radius:8px;border:1.5px solid #FFCDD2;background:#FFF5F5;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;transition:all 0.2s;flex-shrink:0}
+.del-btn:hover{background:#FFEBEE;border-color:#EF9A9A;transform:scale(1.1)}
+
+/* CHART */
+.chart-wrap{background:var(--white);border:1.5px solid var(--b6);border-radius:var(--rad);padding:16px;margin-bottom:14px}
+.chart-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.cbl{width:76px;font-size:12px;color:var(--ink2);text-align:right;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cbg{flex:1;background:var(--b6);border-radius:6px;height:20px;overflow:hidden;position:relative}
+.cbf{height:100%;border-radius:6px;transition:width 1s cubic-bezier(.4,0,.2,1);background:linear-gradient(90deg,var(--b2),var(--b4))}
+.cbf.low{background:linear-gradient(90deg,#64B5F6,#90CAF9)}
+.cbpct{font-size:11px;color:var(--ink3);width:30px;text-align:right;flex-shrink:0;font-weight:500}
+
+/* DIAGRAM */
+.diag-wrap{background:var(--white);border:1.5px solid var(--b6);border-radius:var(--rad);padding:16px;margin-bottom:14px;overflow:hidden}
+
+/* INSIGHT */
+.insight-item{display:flex;gap:12px;align-items:flex-start;padding:13px 14px;background:var(--white);border:1.5px solid var(--b6);border-radius:var(--rad);margin-bottom:8px}
+.ins-ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.ins-ico.g{background:var(--b6)}
+.ins-ico.w{background:#FFF8E7}
+.ins-ico.i{background:#EAF5EA}
+.ins-txt{font-size:13px;color:var(--ink2);line-height:1.55}
+.ins-txt strong{color:var(--ink);font-weight:600}
+
+/* AI */
+.ai-panel{background:var(--white);border:1.5px solid var(--b5);border-radius:var(--rad);padding:16px;margin-bottom:14px}
+.ai-hdr{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.ai-pulse{width:8px;height:8px;border-radius:50%;background:var(--b3);animation:pulse3d 2s ease-in-out infinite}
+.ai-lbl{font-size:11px;font-weight:700;color:var(--b1);text-transform:uppercase;letter-spacing:0.6px}
+.ai-messages{max-height:200px;overflow-y:auto;margin-bottom:10px;display:flex;flex-direction:column;gap:7px}
+.ai-msg{padding:9px 12px;border-radius:10px;font-size:13px;line-height:1.5}
+.ai-msg.u{background:var(--b2);color:#fff;margin-left:24px;border-radius:10px 10px 2px 10px}
+.ai-msg.b{background:var(--surf);border:1px solid var(--b6);color:var(--ink2);margin-right:24px;border-radius:10px 10px 10px 2px}
+.ai-msg.l{background:var(--surf);border:1px dashed var(--b5);color:var(--ink3);font-style:italic;margin-right:24px}
+.ai-inp-row{display:flex;gap:8px}
+.ai-inp{flex:1;border:1.5px solid var(--b5);border-radius:var(--rad-sm);padding:9px 12px;font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;outline:none;color:var(--ink);transition:border-color 0.2s;background:var(--white)}
+.ai-inp:focus{border-color:var(--b3)}
+.ai-send{background:var(--b2);color:#fff;border:none;border-radius:var(--rad-sm);padding:9px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;white-space:nowrap;transition:all 0.2s}
+.ai-send:hover{background:var(--b1);transform:translateY(-1px)}
+
+/* HEALTH TIPS */
+.tip-card{background:var(--white);border:1.5px solid var(--b6);border-radius:var(--rad);padding:13px 14px;margin-bottom:8px;border-left:3px solid var(--b3)}
+.tip-cat{font-size:10px;font-weight:700;color:var(--b2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+.tip-txt{font-size:13px;color:var(--ink2);line-height:1.55}
+
+/* MODAL */
+.overlay{display:none;position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(13,27,42,0.6);z-index:50;min-height:600px;align-items:flex-end;justify-content:center;backdrop-filter:blur(2px)}
+.overlay.open{display:flex;animation:fadeIn 0.2s}
+.modal{background:var(--white);border-radius:var(--rad-lg) var(--rad-lg) 0 0;padding:22px 20px 28px;width:100%;max-width:680px;animation:slideDown 0.3s ease}
+.modal-title{font-family:'Fraunces',serif;font-size:18px;font-weight:600;margin-bottom:16px;color:var(--ink)}
+.flbl{font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;display:block}
+.finp{width:100%;border:1.5px solid var(--b5);border-radius:var(--rad-sm);padding:10px 13px;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif;outline:none;color:var(--ink);margin-bottom:14px;transition:border-color 0.2s;background:var(--white)}
+.finp:focus{border-color:var(--b3)}
+.emoji-grid{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}
+.emoj-opt{width:38px;height:38px;border-radius:9px;border:1.5px solid var(--b5);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;background:var(--white);transition:all 0.15s}
+.emoj-opt.sel{border-color:var(--b2);background:var(--b6);transform:scale(1.1)}
+.modal-btns{display:flex;gap:10px}
+.btn-cancel{flex:1;padding:11px;border:1.5px solid var(--b5);border-radius:var(--rad-sm);background:var(--white);font-size:14px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink3);font-weight:500}
+.btn-save{flex:2;padding:11px;border:none;border-radius:var(--rad-sm);background:linear-gradient(135deg,var(--b1),var(--b3));color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;box-shadow:0 4px 12px rgba(21,101,192,0.25)}
+
+/* SHARE */
+.share-panel{background:var(--b6);border:1.5px solid var(--b5);border-radius:var(--rad);padding:16px;margin-bottom:14px}
+.share-title{font-size:13px;font-weight:600;color:var(--b1);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.share-btns{display:flex;gap:8px;flex-wrap:wrap}
+.share-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:20px;border:1.5px solid var(--b4);background:var(--white);font-size:12px;font-weight:600;color:var(--b2);cursor:pointer;transition:all 0.2s;font-family:'Plus Jakarta Sans',sans-serif}
+.share-btn:hover{background:var(--b5);transform:translateY(-1px)}
+.share-code{background:var(--white);border:1.5px solid var(--b5);border-radius:var(--rad-sm);padding:10px 14px;margin-top:10px;font-family:monospace;font-size:13px;color:var(--ink2);display:none;word-break:break-all}
+.share-code.show{display:block;animation:fadeIn 0.3s}
+
+/* SECTION */
+.section{display:none}.section.active{display:block}
+.empty-state{text-align:center;padding:32px 16px;color:var(--ink3)}
+.empty-state .e-ico{font-size:36px;margin-bottom:10px}
+.empty-state .e-ttl{font-size:15px;font-weight:600;color:var(--ink2);margin-bottom:6px}
+.empty-state .e-sub{font-size:13px}
+</style>
+
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden">Simple — зуршил хянах апп, нэвтрэх хуудас болон гол функцуудтай</h2>
+<div id="app" style="position:relative">
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-orb">📋</div>
+  <div class="login-title">Simple</div>
+  <div class="login-sub">Зуршлаа хянаж, өдөр бүр өсөлт хий</div>
+  <div class="login-card">
+    <button class="social-btn" onclick="loginWith('Google')">
+      <svg class="social-icon" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+      Gmail-ээр нэвтрэх
+    </button>
+    <button class="social-btn" onclick="loginWith('Apple')">
+      <svg class="social-icon" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" fill="#000"/></svg>
+      Apple ID-ээр нэвтрэх
+    </button>
+    <div class="divider">эсвэл</div>
+    <input class="email-inp" id="login-email" placeholder="И-мэйл хаяг" type="email">
+    <input class="email-inp" id="login-pass" placeholder="Нууц үг" type="password">
+    <button class="login-btn" onclick="loginWith('Email')">Нэвтрэх →</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="main-app" style="display:none">
+  <div class="header">
+    <div class="hdr-blob" style="width:160px;height:160px;top:-60px;right:-40px;background:rgba(255,255,255,1)"></div>
+    <div class="hdr-blob" style="width:80px;height:80px;top:20px;right:60px;background:rgba(255,255,255,1)"></div>
+    <div class="hdr-top">
+      <div class="hdr-left">
+        <div class="avatar" id="user-avatar" onclick="logout()">😊</div>
+        <div>
+          <div class="app-name-hdr">Simple</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.65);margin-top:1px" id="user-greeting">Нэвтэрлээ</div>
+        </div>
+      </div>
+      <div class="hdr-date" id="hdr-date"></div>
+    </div>
+    <div class="nav" id="main-nav">
+      <button class="nav-btn act" onclick="goTab(0)">Өнөөдөр</button>
+      <button class="nav-btn" onclick="goTab(1)">Дүн</button>
+      <button class="nav-btn" onclick="goTab(2)">Диаграм</button>
+      <button class="nav-btn" onclick="goTab(3)">AI</button>
+      <button class="nav-btn" onclick="goTab(4)">Хуваалцах</button>
+      <div class="nav-indicator" id="nav-ind"></div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- TAB 0: TODAY -->
+    <div class="section active" id="tab-0">
+      <div class="stats-row">
+        <div class="stat-card blue" onclick="sendPrompt('Миний streak-г нэмэгдүүлэхийн тулд юу хийх вэ? ↗')">
+          <div class="stat-num" id="s-streak">0</div>
+          <div class="stat-lbl">🔥 Дараалал</div>
+        </div>
+        <div class="stat-card light">
+          <div class="stat-num" id="s-today">0/0</div>
+          <div class="stat-lbl">✅ Өнөөдөр</div>
+        </div>
+        <div class="stat-card light">
+          <div class="stat-num" id="s-week">0%</div>
+          <div class="stat-lbl">📅 7 хоног</div>
+        </div>
+      </div>
+      <div class="week-row" id="week-row"></div>
+      <div class="sec-hdr">
+        <div class="sec-title">Миний зуршлууд</div>
+        <button class="add-fab" onclick="openAdd()">＋ Нэмэх</button>
+      </div>
+      <div id="habit-list"></div>
+    </div>
+
+    <!-- TAB 1: STATS -->
+    <div class="section" id="tab-1">
+      <div class="sec-title" style="margin-bottom:14px">7 хоногийн гүйцэтгэл</div>
+      <div class="chart-wrap" id="perf-chart"></div>
+      <div class="sec-title" style="margin-bottom:10px;margin-top:4px">Зөвлөмж</div>
+      <div id="insights"></div>
+    </div>
+
+    <!-- TAB 2: DIAGRAM -->
+    <div class="section" id="tab-2">
+      <div class="sec-title" style="margin-bottom:12px">Зуршлын хэв маяг</div>
+      <div class="diag-wrap">
+        <svg id="habit-svg" width="100%" viewBox="0 0 640 300" style="display:block"></svg>
+      </div>
+      <div class="sec-title" style="margin-bottom:12px">Долоо хоногийн хэв маяг</div>
+      <div class="diag-wrap">
+        <canvas id="radar-canvas" width="640" height="260" style="width:100%;display:block"></canvas>
+      </div>
+    </div>
+
+    <!-- TAB 3: AI -->
+    <div class="section" id="tab-3">
+      <div class="ai-panel">
+        <div class="ai-hdr"><div class="ai-pulse"></div><div class="ai-lbl">AI Туслах · Simple</div></div>
+        <div class="ai-messages" id="ai-chat">
+          <div class="ai-msg b">Сайн уу! Зуршил, эрүүл мэнд, амьдралын чанарын талаар надаас асуугаарай 🌟</div>
+        </div>
+        <div class="ai-inp-row">
+          <input class="ai-inp" id="ai-input" placeholder="Асуулт бичнэ үү..." onkeydown="if(event.key==='Enter')sendAI()">
+          <button class="ai-send" onclick="sendAI()">Илгээх</button>
+        </div>
+      </div>
+      <div class="sec-title" style="margin-bottom:10px">Эрүүл мэндийн зөвлөгөө</div>
+      <div id="health-tips"></div>
+    </div>
+
+    <!-- TAB 4: SHARE -->
+    <div class="section" id="tab-4">
+      <div class="sec-title" style="margin-bottom:12px">Найзтайгаа хуваалцах</div>
+      <div class="share-panel">
+        <div class="share-title">📤 Хуваалцах сонголт</div>
+        <div class="share-btns">
+          <button class="share-btn" onclick="doShare('link')">🔗 Холбоос</button>
+          <button class="share-btn" onclick="doShare('copy')">📋 Хуулах</button>
+          <button class="share-btn" onclick="doShare('report')">📊 Тайлан</button>
+          <button class="share-btn" onclick="doShare('invite')">👥 Урих</button>
+        </div>
+        <div class="share-code" id="share-out"></div>
+      </div>
+      <div class="sec-title" style="margin-bottom:10px">Миний онооллын хуудас</div>
+      <div id="share-card-preview"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ADD MODAL -->
+<div class="overlay" id="add-modal">
+  <div class="modal" style="max-height:80vh;overflow-y:auto">
+    <div class="modal-title">✨ Шинэ зуршил нэмэх</div>
+    <label class="flbl">Зуршлын нэр</label>
+    <input class="finp" id="n-name" placeholder="жнь. Ус уух, Дасгал хийх...">
+    <label class="flbl">Ангилал</label>
+    <input class="finp" id="n-cat" placeholder="жнь. Эрүүл мэнд, Боловсрол...">
+    <label class="flbl">Emoji сонгох</label>
+    <div class="emoji-grid" id="emoji-grid"></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeAdd()">Болих</button>
+      <button class="btn-save" onclick="saveHabit()">Хадгалах →</button>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const EMOJIS=['💧','🏃','📚','🧘','😴','🥗','💊','🎯','✍️','🚴','🧠','☀️','🎵','🌿','💪','🏋️','🥤','🧹','💤','🌅','🎨','🤸','🛁','📝','🍎'];
+let selEmoji='🎯',curUser=null,curTab=0;
+let habits=[];
+
+try{habits=JSON.parse(localStorage.getItem('simple_v2_habits')||'[]')}catch(e){habits=[]}
+if(!habits.length){
+  habits=[
+    {id:1,name:'Ус уух (8 аяга)',cat:'Эрүүл мэнд',emoji:'💧',streak:5,h:[1,1,1,1,1,0,1],done:false,color:'#2196F3'},
+    {id:2,name:'30 мин дасгал',cat:'Фитнесс',emoji:'🏃',streak:3,h:[1,1,1,0,1,1,0],done:false,color:'#1565C0'},
+    {id:3,name:'Ном унших',cat:'Боловсрол',emoji:'📚',streak:7,h:[1,1,1,1,1,1,1],done:false,color:'#42A5F5'},
+    {id:4,name:'Медитаци',cat:'Сэтгэл',emoji:'🧘',streak:1,h:[0,1,0,0,1,0,1],done:false,color:'#64B5F6'},
+  ];
+  save();
+}
+
+function save(){try{localStorage.setItem('simple_v2_habits',JSON.stringify(habits))}catch(e){}}
+
+function loginWith(method){
+  const em=document.getElementById('login-email').value||'user@example.com';
+  const avatars={'Google':'🌐','Apple':'🍎','Email':'👤'};
+  curUser={name:method==='Google'?'Gmail хэрэглэгч':method==='Apple'?'Apple хэрэглэгч':em.split('@')[0],avatar:avatars[method],method};
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('main-app').style.display='block';
+  document.getElementById('user-avatar').textContent=avatars[method];
+  document.getElementById('user-greeting').textContent=curUser.name+' — сайн уу!';
+  renderDate();renderAll();
+}
+function logout(){
+  if(!confirm('Гарах уу?'))return;
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('main-app').style.display='none';
+}
+
+function renderDate(){
+  const now=new Date();
+  const days=['Ням','Да','Мя','Лх','Пү','Ба','Бя'];
+  const months=['1-р сар','2-р сар','3-р сар','4-р сар','5-р сар','6-р сар','7-р сар','8-р сар','9-р сар','10-р сар','11-р сар','12-р сар'];
+  document.getElementById('hdr-date').innerHTML=`${months[now.getMonth()]}<span>${now.getDate()}, ${days[now.getDay()]}</span>`;
+}
+
+function goTab(i){
+  curTab=i;
+  document.querySelectorAll('.nav-btn').forEach((b,j)=>b.classList.toggle('act',j===i));
+  document.querySelectorAll('.section').forEach((s,j)=>s.classList.toggle('active',j===i));
+  const btns=document.querySelectorAll('.nav-btn');
+  const ind=document.getElementById('nav-ind');
+  if(btns[i]){
+    const r=btns[i].getBoundingClientRect();
+    const nr=document.getElementById('main-nav').getBoundingClientRect();
+    ind.style.left=(r.left-nr.left)+'px';
+    ind.style.width=r.width+'px';
+  }
+  if(i===1)renderAnalyze();
+  if(i===2)renderDiagram();
+  if(i===4)renderShareCard();
+}
+
+function renderAll(){
+  renderWeek();renderStats();renderHabits();renderHealthTips();
+  setTimeout(()=>goTab(0),50);
+}
+
+function renderStats(){
+  const streak=habits.length?Math.min(...habits.map(h=>h.streak)):0;
+  const done=habits.filter(h=>h.done).length;
+  const weekTotal=habits.reduce((a,h)=>a+h.h.filter(Boolean).length,0);
+  const weekMax=habits.length*7;
+  document.getElementById('s-streak').textContent=streak;
+  document.getElementById('s-today').textContent=done+'/'+habits.length;
+  document.getElementById('s-week').textContent=weekMax?Math.round(weekTotal/weekMax*100)+'%':'0%';
+}
+
+function renderWeek(){
+  const dnames=['Да','Мя','Лх','Пү','Ба','Бя','Ням'];
+  const today=new Date().getDay();
+  const tod=(today+6)%7;
+  document.getElementById('week-row').innerHTML=dnames.map((d,i)=>{
+    const done=habits.length&&habits.every(h=>h.h[i]);
+    const partial=habits.some(h=>h.h[i]);
+    const cls=done?'done':i===tod?'today':'';
+    return`<div class="day-col"><div class="day-name">${d}</div><div class="day-ring ${cls}">${i+1}</div></div>`;
+  }).join('');
+}
+
+function renderHabits(){
+  const el=document.getElementById('habit-list');
+  if(!habits.length){
+    el.innerHTML='<div class="empty-state"><div class="e-ico">🌱</div><div class="e-ttl">Зуршил байхгүй байна</div><div class="e-sub">Дээрх + дарж эхний зуршлаа нэмнэ үү!</div></div>';
+    return;
+  }
+  el.innerHTML=habits.map((h,i)=>`
+    <div class="habit-card ${h.done?'done-card':''}" style="animation-delay:${i*0.06}s">
+      <button class="hc-check ${h.done?'chk':''}" onclick="toggle(${h.id})"></button>
+      <div class="hc-emoji">${h.emoji}</div>
+      <div class="hc-body">
+        <div class="hc-name">${h.name}</div>
+        <div class="hc-meta">${h.cat} · ${h.h.filter(Boolean).length}/7 өдөр</div>
+      </div>
+      <div class="hc-streak">${h.streak}🔥</div>
+      <button class="del-btn" onclick="delHabit(${h.id})" title="Устгах">✕</button>
+    </div>
+  `).join('');
+}
+
+function toggle(id){
+  const h=habits.find(x=>x.id===id);
+  if(!h)return;
+  h.done=!h.done;
+  if(h.done){h.streak++;h.h[h.h.length-1]=1}
+  else{h.streak=Math.max(0,h.streak-1);h.h[h.h.length-1]=0}
+  save();renderHabits();renderStats();renderWeek();
+}
+
+function delHabit(id){
+  if(!confirm('Устгах уу?'))return;
+  habits=habits.filter(h=>h.id!==id);
+  save();renderHabits();renderStats();renderWeek();
+}
+
+function openAdd(){
+  const g=document.getElementById('emoji-grid');
+  selEmoji='🎯';
+  g.innerHTML=EMOJIS.map(e=>`<button class="emoj-opt ${e===selEmoji?'sel':''}" onclick="pickEmoji('${e}')">${e}</button>`).join('');
+  document.getElementById('add-modal').classList.add('open');
+  document.getElementById('n-name').value='';
+  document.getElementById('n-cat').value='';
+}
+function closeAdd(){document.getElementById('add-modal').classList.remove('open')}
+function pickEmoji(e){
+  selEmoji=e;
+  document.querySelectorAll('.emoj-opt').forEach(el=>el.classList.toggle('sel',el.textContent===e));
+}
+function saveHabit(){
+  const nm=document.getElementById('n-name').value.trim();
+  const cat=document.getElementById('n-cat').value.trim()||'Ерөнхий';
+  if(!nm){document.getElementById('n-name').style.borderColor='#EF9A9A';return}
+  habits.push({id:Date.now(),name:nm,cat,emoji:selEmoji,streak:0,h:[0,0,0,0,0,0,0],done:false,color:'#2196F3'});
+  save();closeAdd();renderHabits();renderStats();
+}
+
+function renderAnalyze(){
+  const el=document.getElementById('perf-chart');
+  const ins=document.getElementById('insights');
+  if(!habits.length){el.innerHTML='<div class="empty-state"><div class="e-ico">📊</div><div class="e-ttl">Өгөгдөл алга</div></div>';ins.innerHTML='';return}
+  el.innerHTML=habits.map(h=>{
+    const pct=Math.round(h.h.filter(Boolean).length/7*100);
+    const low=pct<50;
+    return`<div class="chart-bar-row">
+      <div class="cbl">${h.emoji} ${h.name.split(' ')[0]}</div>
+      <div class="cbg"><div class="cbf ${low?'low':''}" style="width:${pct}%"></div></div>
+      <div class="cbpct">${pct}%</div>
+    </div>`;
+  }).join('');
+  const best=habits.reduce((a,b)=>b.streak>a.streak?b:a,habits[0]);
+  const worst=habits.reduce((a,b)=>b.h.filter(Boolean).length<a.h.filter(Boolean).length?b:a,habits[0]);
+  const avg=Math.round(habits.reduce((a,h)=>a+h.h.filter(Boolean).length,0)/(habits.length*7)*100);
+  ins.innerHTML=`
+    <div class="insight-item"><div class="ins-ico g">🏆</div><div class="ins-txt"><strong>Хамгийн тогтвортой:</strong> ${best.emoji} ${best.name} — ${best.streak} өдрийн дараалалтай.</div></div>
+    <div class="insight-item"><div class="ins-ico w">⚡</div><div class="ins-txt"><strong>Сайжруулах боломжтой:</strong> ${worst.emoji} ${worst.name} — ${Math.round(worst.h.filter(Boolean).length/7*100)}% гүйцэтгэлтэй. Жижиг алхамаас эхэл.</div></div>
+    <div class="insight-item"><div class="ins-ico i">💡</div><div class="ins-txt"><strong>Нийт дундаж:</strong> ${avg}%. ${avg>=70?'Маш сайн явж байна! Тогтвор барь 💪':'Өдөр бүр нэг зуршлаа гүйцэтгэх нь хамгийн чухал.'}</div></div>
+  `;
+}
+
+function renderDiagram(){
+  if(!habits.length)return;
+  const svg=document.getElementById('habit-svg');
+  const W=640,H=300,cx=W/2,cy=H/2,R=100;
+  const n=habits.length;
+  let shapes='';
+  habits.forEach((h,i)=>{
+    const ang=(i/n)*Math.PI*2-Math.PI/2;
+    const pct=h.h.filter(Boolean).length/7;
+    const r=30+pct*R;
+    const x=Math.round(cx+Math.cos(ang)*r);
+    const y=Math.round(cy+Math.sin(ang)*r);
+    const cr=Math.round(10+pct*18);
+    const op=(0.4+pct*0.6).toFixed(2);
+    shapes+=`<circle cx="${x}" cy="${y}" r="${cr}" fill="#2196F3" opacity="${op}" stroke="white" stroke-width="1.5"/>`;
+    const lx=Math.round(cx+Math.cos(ang)*(r+cr+16));
+    const ly=Math.round(cy+Math.sin(ang)*(r+cr+16));
+    shapes+=`<text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central" font-size="11" fill="#1565C0" font-weight="500">${h.emoji} ${h.name.split(' ')[0]}</text>`;
+  });
+  svg.innerHTML=`
+    <circle cx="${cx}" cy="${cy}" r="${R+30}" fill="#E3F2FD" opacity="0.4"/>
+    <circle cx="${cx}" cy="${cy}" r="${R}" fill="#BBDEFB" opacity="0.4"/>
+    <circle cx="${cx}" cy="${cy}" r="60" fill="#90CAF9" opacity="0.3"/>
+    <circle cx="${cx}" cy="${cy}" r="24" fill="#2196F3" opacity="0.15"/>
+    ${shapes}
+    <text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#1565C0" font-weight="600">Bubble</text>
+    <text x="${cx}" y="${cy+14}" text-anchor="middle" dominant-baseline="central" font-size="10" fill="#42A5F5">chart</text>
+  `;
+
+  const canvas=document.getElementById('radar-canvas');
+  const ctx=canvas.getContext('2d');
+  const cw=640,ch=260;
+  ctx.clearRect(0,0,cw,ch);
+  const rcx=cw/2,rcy=ch/2,rR=90;
+  ctx.strokeStyle='#BBDEFB';ctx.lineWidth=1;
+  [0.25,0.5,0.75,1].forEach(r=>{
+    ctx.beginPath();ctx.arc(rcx,rcy,rR*r,0,Math.PI*2);ctx.stroke();
+  });
+  const dn=['Да','Мя','Лх','Пү','Ба','Бя','Ням'];
+  dn.forEach((d,i)=>{
+    const a=i/7*Math.PI*2-Math.PI/2;
+    ctx.strokeStyle='#BBDEFB';ctx.lineWidth=0.8;
+    ctx.beginPath();ctx.moveTo(rcx,rcy);ctx.lineTo(rcx+Math.cos(a)*(rR+10),rcy+Math.sin(a)*(rR+10));ctx.stroke();
+    ctx.fillStyle='#6B84A0';ctx.font='11px Plus Jakarta Sans,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(d,rcx+Math.cos(a)*(rR+22),rcy+Math.sin(a)*(rR+22));
+  });
+  habits.forEach((h,hi)=>{
+    const dayTotals=h.h.map(v=>v?1:0);
+    ctx.beginPath();ctx.strokeStyle='rgba(33,150,243,'+(0.5+hi*0.1)+')';ctx.lineWidth=2;ctx.fillStyle='rgba(33,150,243,0.08)';
+    dayTotals.forEach((v,i)=>{
+      const a=i/7*Math.PI*2-Math.PI/2;
+      const pr=v*rR;
+      if(i===0)ctx.moveTo(rcx+Math.cos(a)*pr,rcy+Math.sin(a)*pr);
+      else ctx.lineTo(rcx+Math.cos(a)*pr,rcy+Math.sin(a)*pr);
+    });
+    ctx.closePath();ctx.stroke();ctx.fill();
+  });
+}
+
+function renderShareCard(){
+  const el=document.getElementById('share-card-preview');
+  const done=habits.filter(h=>h.done).length;
+  const total=habits.length;
+  const streak=habits.length?Math.min(...habits.map(h=>h.streak)):0;
+  const pct=total?Math.round(done/total*100):0;
+  el.innerHTML=`<div style="background:linear-gradient(135deg,#1565C0,#2196F3);border-radius:16px;padding:20px;color:#fff;font-family:'Plus Jakarta Sans',sans-serif">
+    <div style="font-size:22px;font-weight:700;margin-bottom:4px">Simple</div>
+    <div style="font-size:12px;opacity:0.8;margin-bottom:16px">Зуршил хянах апп</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+      <div style="background:rgba(255,255,255,0.15);border-radius:10px;padding:10px;text-align:center">
+        <div style="font-size:22px;font-weight:700">${streak}</div>
+        <div style="font-size:10px;opacity:0.75">🔥 Дараалал</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.15);border-radius:10px;padding:10px;text-align:center">
+        <div style="font-size:22px;font-weight:700">${done}/${total}</div>
+        <div style="font-size:10px;opacity:0.75">✅ Өнөөдөр</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.15);border-radius:10px;padding:10px;text-align:center">
+        <div style="font-size:22px;font-weight:700">${pct}%</div>
+        <div style="font-size:10px;opacity:0.75">📈 7 хоног</div>
+      </div>
+    </div>
+    <div style="font-size:12px;opacity:0.8">${habits.map(h=>h.emoji+' '+h.name).join(' · ')}</div>
+  </div>`;
+}
+
+function doShare(type){
+  const out=document.getElementById('share-out');
+  const streak=habits.length?Math.min(...habits.map(h=>h.streak)):0;
+  const done=habits.filter(h=>h.done).length;
+  const msgs={
+    link:`simple://share?u=${encodeURIComponent(curUser?.name||'user')}&s=${streak}&d=${done}&h=${habits.length}`,
+    copy:`Өнөөдөр ${done}/${habits.length} зуршлаа гүйцэтгэлээ! 🔥${streak} өдрийн дараалалтай байна. ${habits.map(h=>h.emoji).join('')} #SimpleHabit`,
+    report:`📊 Долоо хоногийн тайлан\n━━━━━━━━━━━━━━━\n${habits.map(h=>`${h.emoji} ${h.name}: ${Math.round(h.h.filter(Boolean).length/7*100)}%`).join('\n')}\n━━━━━━━━━━━━━━━\n🔥 Нийт дараалал: ${streak} өдөр`,
+    invite:`Сайн уу! Надтай хамт Simple апп дээр зуршлаа хянаарай. 📋 Код: SIMPLE${Math.floor(1000+Math.random()*9000)}`
+  };
+  out.textContent=msgs[type];
+  out.classList.add('show');
+  if(type==='copy'){
+    try{navigator.clipboard.writeText(msgs.copy)}catch(e){}
+    const tmp=out.textContent;out.textContent='✅ Хуулагдлаа!';setTimeout(()=>{out.textContent=tmp},2000);
+  }
+}
+
+function renderHealthTips(){
+  const tips=[
+    {cat:'Ус',txt:'Өглөө сэрсний дараа нэн даруй нэг стакан ус уух нь бодисын солилцоог 24%-иар нэмэгдүүлдэг.'},
+    {cat:'Унтах',txt:'Өдөр бүр ижил цагт унтаж, сэрэх нь нойрны чанарыг мэдэгдэхүйц сайжруулна.'},
+    {cat:'Хөдөлгөөн',txt:'Цаг тутам 2 минут зогсож сунгах нь нуруу, хүзүүний өвдөлтийг 30%-иар багасгана.'},
+    {cat:'Стресс',txt:'Гүн амьсгаа (4-7-8 арга) нь стрессийн дааврыг 23%-иар бууруулна.'},
+    {cat:'Хоол',txt:'Идэхийн өмнө 20 мин хүлээх нь хэт идэхээс сэргийлдэг.'},
+  ];
+  document.getElementById('health-tips').innerHTML=tips.map(t=>`<div class="tip-card"><div class="tip-cat">${t.cat}</div><div class="tip-txt">${t.txt}</div></div>`).join('');
+}
+
+async function sendAI(){
+  const inp=document.getElementById('ai-input');
+  const chat=document.getElementById('ai-chat');
+  const q=inp.value.trim();
+  if(!q)return;
+  inp.value='';
+  chat.innerHTML+=`<div class="ai-msg u">${q}</div>`;
+  const ld=document.createElement('div');
+  ld.className='ai-msg l';ld.id='ai-ld';ld.textContent='Бодож байна...';
+  chat.appendChild(ld);chat.scrollTop=chat.scrollHeight;
+  const sum=habits.map(h=>`${h.emoji}${h.name}(${h.streak}🔥,${Math.round(h.h.filter(Boolean).length/7*100)}%)`).join(', ');
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:`Чи "Simple" зуршил хянах аппын AI туслах. Монгол хэлээр богино, эерэг, бодитой хариулт өгнө. Хэрэглэгчийн зуршлууд: ${sum||'алга'}. Хариулт 2-4 өгүүлбэртэй байна. Emoji ашиглаж болно.`,
+        messages:[{role:'user',content:q}]
+      })
+    });
+    const d=await res.json();
+    const txt=d.content?.map(c=>c.text||'').join('')||'Алдаа гарлаа.';
+    document.getElementById('ai-ld').remove();
+    chat.innerHTML+=`<div class="ai-msg b">${txt}</div>`;
+  }catch(e){
+    document.getElementById('ai-ld').remove();
+    chat.innerHTML+=`<div class="ai-msg b">Интернет холболт шаардлагатай.</div>`;
+  }
+  chat.scrollTop=chat.scrollHeight;
+}
+
+renderHealthTips();
+setTimeout(()=>{const ind=document.getElementById('nav-ind');if(ind)goTab(0)},100);
+</script>

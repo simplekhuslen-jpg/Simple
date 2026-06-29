@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <canvas id="bg"></canvas>
+
+  <div class="app">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar">
+      <div class="logo">
+        <div class="logo-icon">✦</div>
+        <span class="logo-text">My Space</span>
+      </div>
+
+      <nav class="nav">
+        <button class="nav-btn active" data-tab="dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+          </svg>
+          <span>Dashboard</span>
+        </button>
+        <button class="nav-btn" data-tab="habits">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          <span data-i18n="nav.habits">Habits</span>
+        </button>
+        <button class="nav-btn" data-tab="finance">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="1" x2="12" y2="23"/>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+          <span data-i18n="nav.finance">Finance</span>
+        </button>
+        <button class="nav-btn" data-tab="notes">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+          <span data-i18n="nav.notes">Notes</span>
+        </button>
+        <button class="nav-btn" data-tab="focus">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+          <span>Focus</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div id="sidebar-clock"></div>
+        <button class="lang-btn" id="lang-btn">🌐 EN</button>
+        <div class="export-row">
+          <button class="exp-btn" onclick="exportJSON()">⬇ JSON</button>
+          <button class="exp-btn" onclick="exportCSV()">⬇ CSV</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ===== MAIN ===== -->
+    <main class="main">
+
+      <!-- DASHBOARD -->
+      <section class="tab active" id="tab-dashboard">
+        <div class="page-header">
+          <div>
+            <h1 id="greeting">Сайн байна уу!</h1>
+            <p class="subtitle" id="date-full"></p>
+          </div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card card">
+            <div class="stat-icon icon-purple">🎯</div>
+            <div class="stat-body">
+              <span class="stat-val" id="stat-habits">0/0</span>
+              <span class="stat-lbl" data-i18n="dash.stat.habits">Өнөөдрийн зуршил</span>
+            </div>
+          </div>
+          <div class="stat-card card">
+            <div class="stat-icon icon-green">₮</div>
+            <div class="stat-body">
+              <span class="stat-val" id="stat-balance">₮0</span>
+              <span class="stat-lbl" data-i18n="dash.stat.balance">Нийт баланс</span>
+            </div>
+          </div>
+          <div class="stat-card card">
+            <div class="stat-icon icon-cyan">📝</div>
+            <div class="stat-body">
+              <span class="stat-val" id="stat-notes">0</span>
+              <span class="stat-lbl" data-i18n="dash.stat.notes">Тэмдэглэлүүд</span>
+            </div>
+          </div>
+        </div>
+        <div class="dash-grid">
+          <div class="card">
+            <div class="card-title" data-i18n="dash.card.habits">Өнөөдрийн зуршил</div>
+            <div id="dash-habits"></div>
+          </div>
+          <div class="card">
+            <div class="card-title" data-i18n="dash.card.notes">Чухал тэмдэглэл</div>
+            <div id="dash-notes"></div>
+          </div>
+        </div>
+        <div class="card feed-card">
+          <div class="card-title" data-i18n="feed.title">Өнөөдрийн тэмдэглэл</div>
+          <div id="today-feed"></div>
+        </div>
+      </section>
+
+      <!-- HABITS -->
+      <section class="tab" id="tab-habits">
+        <div class="page-header">
+          <h1>Habit Tracker</h1>
+          <button class="btn-primary" id="btn-add-habit" data-i18n="habits.add">+ Зуршил нэмэх</button>
+        </div>
+        <div class="habits-grid" id="habits-list"></div>
+      </section>
+
+      <!-- FINANCE -->
+      <section class="tab" id="tab-finance">
+        <div class="page-header">
+          <h1 data-i18n="fin.title">Санхүүгийн төлөвлөгөө</h1>
+          <button class="btn-primary" id="btn-add-trans" data-i18n="fin.add">+ Нэмэх</button>
+        </div>
+        <div class="finance-summary">
+          <div class="card fin-card">
+            <span class="fin-label" data-i18n="fin.balance">Нийт баланс</span>
+            <span class="fin-amount" id="fin-balance">₮0</span>
+          </div>
+          <div class="card fin-card">
+            <span class="fin-label" data-i18n="fin.income">Нийт орлого</span>
+            <span class="fin-amount green" id="fin-income">₮0</span>
+          </div>
+          <div class="card fin-card">
+            <span class="fin-label" data-i18n="fin.expense">Нийт зарлага</span>
+            <span class="fin-amount red" id="fin-expense">₮0</span>
+          </div>
+        </div>
+        <div class="finance-bottom">
+          <div class="card">
+            <div class="card-title" data-i18n="fin.trans">Гүйлгээнүүд</div>
+            <div id="trans-list"></div>
+          </div>
+          <div class="card">
+            <div class="card-title" data-i18n="fin.chart">Зарлагын задаргаа</div>
+            <div id="finance-chart"></div>
+          </div>
+        </div>
+        <div class="card monthly-card">
+          <div class="card-title" data-i18n="fin.monthly.title">Сарын тайлан</div>
+          <div id="monthly-report"></div>
+        </div>
+      </section>
+
+      <!-- NOTES -->
+      <section class="tab" id="tab-notes">
+        <div class="page-header">
+          <h1 data-i18n="notes.title">Тэмдэглэл</h1>
+          <button class="btn-primary" id="btn-add-note" data-i18n="notes.add">+ Тэмдэглэл нэмэх</button>
+        </div>
+        <div class="notes-grid" id="notes-grid"></div>
+      </section>
+
+      <!-- FOCUS -->
+      <section class="tab" id="tab-focus">
+        <div class="page-header">
+          <h1>Focus Timer</h1>
+        </div>
+        <div class="pomo-wrap">
+          <div class="card pomo-card">
+            <div class="pomo-mode-label" id="pomo-mode">🎯 Ажлын цаг</div>
+            <div class="pomo-ring-wrap">
+              <svg class="pomo-svg" viewBox="0 0 200 200">
+                <circle class="pomo-track" cx="100" cy="100" r="80"/>
+                <circle class="pomo-prog" id="pomo-prog" cx="100" cy="100" r="80"/>
+              </svg>
+              <div class="pomo-time" id="pomo-time">25:00</div>
+            </div>
+            <div class="pomo-btns">
+              <button class="btn-ghost" id="pomo-reset" data-i18n="pomo.reset">↺ Дахиргаа</button>
+              <button class="btn-primary" id="pomo-toggle" data-i18n="pomo.start">▶ Эхлэх</button>
+              <button class="btn-ghost" id="pomo-skip" data-i18n="pomo.skip">⏭ Алгасах</button>
+            </div>
+            <div class="pomo-info">
+              <div class="pomo-stat">
+                <span class="pomo-stat-val" id="pomo-sessions">0</span>
+                <span class="pomo-stat-lbl" data-i18n="pomo.sessions">Дууссан сессийн тоо</span>
+              </div>
+              <div class="pomo-durations">
+                <label><span data-i18n="pomo.work.label">Ажил:</span> <input type="number" id="pomo-work-min" value="25" min="1" max="60" class="pomo-inp"> <span data-i18n="pomo.min">мин</span></label>
+                <label><span data-i18n="pomo.break.label">Амралт:</span> <input type="number" id="pomo-break-min" value="5" min="1" max="30" class="pomo-inp"> <span data-i18n="pomo.min">мин</span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ===== MODALS ===== -->
+
+  <div class="overlay" id="modal-habit">
+    <div class="modal card">
+      <h3 data-i18n="modal.habit.h">Шинэ зуршил</h3>
+      <input type="text" id="habit-name" data-i18n-ph="modal.habit.ph" placeholder="Зуршлын нэр..." class="inp" />
+      <div class="form-label" data-i18n="modal.color">Өнгө сонгох</div>
+      <div class="color-row" id="habit-colors"></div>
+      <div class="habit-modal-row">
+        <div class="habit-modal-col">
+          <div class="form-label" data-i18n="habits.time">Цаг</div>
+          <input type="time" id="habit-time" class="inp" />
+        </div>
+      </div>
+      <div class="form-label" data-i18n="habits.days">Өдөр сонгох</div>
+      <div class="day-row" id="habit-days"></div>
+      <div class="modal-btns">
+        <button class="btn-ghost" data-close="modal-habit" data-i18n="modal.cancel">Болих</button>
+        <button class="btn-primary" id="save-habit" data-i18n="modal.save">Хадгалах</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="modal-trans">
+    <div class="modal card">
+      <h3 data-i18n="modal.trans.h">Шинэ гүйлгээ</h3>
+      <div class="type-row">
+        <button class="type-btn active" data-type="income" data-i18n="modal.income">Орлого</button>
+        <button class="type-btn" data-type="expense" data-i18n="modal.expense">Зарлага</button>
+      </div>
+      <input type="number" id="trans-amount" data-i18n-ph="modal.amount.ph" placeholder="Дүн (₮)..." class="inp" />
+      <select id="trans-cat" class="inp">
+        <option value="Цалин"            data-i18n-opt="cat.salary">Цалин</option>
+        <option value="Хоол"             data-i18n-opt="cat.food">Хоол</option>
+        <option value="Тээвэр"           data-i18n-opt="cat.transport">Тээвэр</option>
+        <option value="Худалдаа"         data-i18n-opt="cat.shopping">Худалдаа</option>
+        <option value="Нийтийн үйлчилгээ" data-i18n-opt="cat.bills">Нийтийн үйлчилгээ</option>
+        <option value="Боловсрол"        data-i18n-opt="cat.edu">Боловсрол</option>
+        <option value="Тоглоом"          data-i18n-opt="cat.fun">Тоглоом</option>
+        <option value="Бусад"            data-i18n-opt="cat.other">Бусад</option>
+      </select>
+      <input type="text" id="trans-desc" data-i18n-ph="modal.desc.ph" placeholder="Тайлбар..." class="inp" />
+      <div class="modal-btns">
+        <button class="btn-ghost" data-close="modal-trans" data-i18n="modal.cancel">Болих</button>
+        <button class="btn-primary" id="save-trans" data-i18n="modal.save">Хадгалах</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="modal-note">
+    <div class="modal card">
+      <h3 id="note-modal-title" data-i18n="modal.note.h">Шинэ тэмдэглэл</h3>
+      <input type="text" id="note-title" data-i18n-ph="modal.note.title.ph" placeholder="Гарчиг..." class="inp" />
+      <textarea id="note-content" data-i18n-ph="modal.note.content.ph" placeholder="Агуулга..." class="inp inp-ta"></textarea>
+      <label class="chk-label">
+        <input type="checkbox" id="note-star" />
+        <span data-i18n="modal.note.star">Чухал гэж тэмдэглэх ⭐</span>
+      </label>
+      <div class="modal-btns">
+        <button class="btn-ghost" data-close="modal-note" data-i18n="modal.cancel">Болих</button>
+        <button class="btn-primary" id="save-note" data-i18n="modal.save">Хадгалах</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile bottom nav -->
+  <nav class="bottom-nav" id="bottom-nav">
+    <button class="bnav-btn active" data-tab="dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+        <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+      </svg>
+      <span data-i18n="bnav.home">Нүүр</span>
+    </button>
+    <button class="bnav-btn" data-tab="habits">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+        <polyline points="22 4 12 14.01 9 11.01"/>
+      </svg>
+      <span data-i18n="nav.habits">Зуршил</span>
+    </button>
+    <button class="bnav-btn" data-tab="finance">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="1" x2="12" y2="23"/>
+        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+      </svg>
+      <span data-i18n="nav.finance">Санхүү</span>
+    </button>
+    <button class="bnav-btn" data-tab="notes">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+      </svg>
+      <span data-i18n="nav.notes">Тэмдэглэл</span>
+    </button>
+    <button class="bnav-btn" data-tab="focus">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="12 6 12 12 16 14"/>
+      </svg>
+      <span>Focus</span>
+    </button>
+  </nav>
+
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Нэхэмжлэх Үүсгэгч</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      color: #1a202c;
+      min-height: 100vh;
+    }
+
+    /* ── Toolbar ── */
+    .toolbar {
+      background: #1a56db;
+      color: white;
+      padding: 14px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,.2);
+    }
+    .toolbar h1 { font-size: 1.2rem; font-weight: 700; letter-spacing: .5px; }
+    .toolbar-actions { display: flex; gap: 10px; }
+
+    .btn {
+      padding: 9px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: .9rem;
+      font-weight: 600;
+      transition: .15s;
+    }
+    .btn-white  { background: white; color: #1a56db; }
+    .btn-white:hover { background: #e8f0fe; }
+    .btn-green  { background: #0d9488; color: white; }
+    .btn-green:hover { background: #0f766e; }
+    .btn-outline { background: transparent; color: white; border: 1.5px solid rgba(255,255,255,.6); }
+    .btn-outline:hover { background: rgba(255,255,255,.1); }
+    .btn-danger { background: #ef4444; color: white; }
+    .btn-danger:hover { background: #dc2626; }
+
+    /* ── Main layout ── */
+    .container {
+      max-width: 900px;
+      margin: 32px auto;
+      padding: 0 16px 60px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-size: .75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #6b7280;
+      margin-bottom: 18px;
+    }
+
+    /* ── Grid helpers ── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+    /* ── Form elements ── */
+    label {
+      display: block;
+      font-size: .8rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 5px;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: .9rem;
+      color: #1a202c;
+      transition: border-color .15s;
+      background: #fafafa;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #1a56db;
+      background: white;
+    }
+    textarea { resize: vertical; min-height: 70px; }
+
+    /* ── Invoice header ── */
+    .invoice-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .invoice-number-badge {
+      background: #eff6ff;
+      border: 1.5px dashed #93c5fd;
+      border-radius: 10px;
+      padding: 14px 24px;
+      text-align: right;
+      min-width: 200px;
+    }
+    .invoice-number-badge .label { font-size: .75rem; color: #6b7280; margin-bottom: 4px; }
+    .invoice-number-badge .number {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #1a56db;
+      letter-spacing: 1px;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: .72rem;
+      font-weight: 700;
+      margin-top: 6px;
+    }
+    .status-pending  { background: #fef3c7; color: #92400e; }
+    .status-paid     { background: #d1fae5; color: #065f46; }
+
+    /* ── Items table ── */
+    .items-header {
+      display: grid;
+      grid-template-columns: 2fr 80px 130px 130px 40px;
+      gap: 8px;
+      padding: 10px 12px;
+      background: #f8fafc;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      font-size: .78rem;
+      font-weight: 700;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+    .item-row {
+      display: grid;
+      grid-template-columns: 2fr 80px 130px 130px 40px;
+      gap: 8px;
+      margin-bottom: 8px;
+      align-items: center;
+    }
+    .item-row input { margin: 0; }
+    .item-total {
+      padding: 10px 12px;
+      background: #f0f4f8;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: .9rem;
+      color: #1a56db;
+      text-align: right;
+    }
+    .remove-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #ef4444;
+      font-size: 1.2rem;
+      padding: 4px;
+      border-radius: 6px;
+      transition: background .15s;
+      line-height: 1;
+    }
+    .remove-btn:hover { background: #fee2e2; }
+
+    .add-item-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #1a56db;
+      font-weight: 600;
+      font-size: .9rem;
+      background: none;
+      border: 1.5px dashed #93c5fd;
+      border-radius: 8px;
+      padding: 10px 16px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 4px;
+      transition: background .15s;
+    }
+    .add-item-btn:hover { background: #eff6ff; }
+
+    /* ── Totals ── */
+    .totals-wrapper {
+      display: flex;
+      justify-content: flex-end;
+    }
+    .totals-box {
+      min-width: 300px;
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      font-size: .9rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .total-row:last-child { border-bottom: none; }
+    .total-row.grand {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #1a56db;
+      padding-top: 14px;
+      margin-top: 4px;
+    }
+    .total-row .tval { font-weight: 700; }
+
+    .vat-toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      font-size: .85rem;
+      font-weight: 600;
+      color: #374151;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 42px;
+      height: 24px;
+      cursor: pointer;
+    }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: #d1d5db;
+      border-radius: 24px;
+      transition: .2s;
+    }
+    .toggle-slider:before {
+      content: '';
+      position: absolute;
+      width: 18px; height: 18px;
+      left: 3px; bottom: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: .2s;
+    }
+    .toggle-switch input:checked + .toggle-slider { background: #1a56db; }
+    .toggle-switch input:checked + .toggle-slider:before { transform: translateX(18px); }
+
+    /* ── Notes ── */
+    .note-area { background: #fffbeb; border-color: #fcd34d; }
+
+    /* ── Print preview ── */
+    @media print {
+      body { background: white; }
+      .toolbar, .no-print { display: none !important; }
+      .container { margin: 0; padding: 0; max-width: 100%; }
+      .card { box-shadow: none; border: 1px solid #e5e7eb; page-break-inside: avoid; }
+      .remove-btn, .add-item-btn { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Toolbar -->
+<div class="toolbar no-print">
+  <h1>📄 Нэхэмжлэх Үүсгэгч</h1>
+  <div class="toolbar-actions">
+    <button class="btn btn-outline" onclick="resetForm()">Шинэ</button>
+    <button class="btn btn-white" onclick="window.print()">🖨️ Хэвлэх</button>
+    <button class="btn btn-green" onclick="savePDF()">⬇️ PDF</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Invoice meta -->
+  <div class="card">
+    <div class="invoice-header">
+      <div style="flex:1; min-width:220px;">
+        <div class="card-title">Нэхэмжлэхийн мэдээлэл</div>
+        <div class="grid-2" style="gap:12px;">
+          <div>
+            <label>Нэхэмжлэх огноо</label>
+            <input type="date" id="invoiceDate" />
+          </div>
+          <div>
+            <label>Төлбөрийн хугацаа</label>
+            <input type="date" id="dueDate" />
+          </div>
+          <div>
+            <label>Статус</label>
+            <select id="invoiceStatus">
+              <option value="pending">Хүлээгдэж байна</option>
+              <option value="paid">Төлсөн</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="invoice-number-badge">
+        <div class="label">Нэхэмжлэх №</div>
+        <div class="number" id="invoiceNumDisplay">#0001</div>
+        <div>
+          <span id="statusBadge" class="status-badge status-pending">Хүлээгдэж байна</span>
+        </div>
+        <div style="margin-top:10px;">
+          <label style="font-size:.75rem; color:#6b7280;">Дугаар өөрчлөх</label>
+          <input type="number" id="invoiceNum" value="1" min="1"
+            style="width:100%; font-size:.85rem; padding:6px 8px; margin-top:2px;"
+            oninput="updateNum(this.value)" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sender & Receiver -->
+  <div class="grid-2" style="gap:20px;">
+    <div class="card">
+      <div class="card-title">Илгээгч (Таны мэдээлэл)</div>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div>
+          <label>Компани / Нэр</label>
+          <input type="text" id="senderName" placeholder="Монгол ХХК" />
+        </div>
+        <div>
+          <label>Регистрийн дугаар</label>
+          <input type="text" id="senderReg" placeholder="1234567" />
+        </div>
+        <div>
+          <label>Хаяг</label>
+          <textarea id="senderAddress" placeholder="УБ хот, СБД, 1-р хороо..."></textarea>
+        </div>
+        <div>
+          <label>Утас</label>
+          <input type="text" id="senderPhone" placeholder="9911-2233" />
+        </div>
+        <div>
+          <label>И-мэйл</label>
+          <input type="email" id="senderEmail" placeholder="info@company.mn" />
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Хүлээн авагч (Харилцагч)</div>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div>
+          <label>Компани / Нэр</label>
+          <input type="text" id="receiverName" placeholder="Харилцагч ХХК" />
+        </div>
+        <div>
+          <label>Регистрийн дугаар</label>
+          <input type="text" id="receiverReg" placeholder="7654321" />
+        </div>
+        <div>
+          <label>Хаяг</label>
+          <textarea id="receiverAddress" placeholder="УБ хот, БЗД..."></textarea>
+        </div>
+        <div>
+          <label>Утас</label>
+          <input type="text" id="receiverPhone" placeholder="9922-3344" />
+        </div>
+        <div>
+          <label>И-мэйл</label>
+          <input type="email" id="receiverEmail" placeholder="client@example.mn" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Items -->
+  <div class="card">
+    <div class="card-title">Бараа / Үйлчилгээ</div>
+    <div class="items-header">
+      <span>Тайлбар</span>
+      <span style="text-align:center;">Тоо</span>
+      <span style="text-align:right;">Нэгж үнэ (₮)</span>
+      <span style="text-align:right;">Нийт (₮)</span>
+      <span></span>
+    </div>
+    <div id="itemsContainer"></div>
+    <button class="add-item-btn no-print" onclick="addItem()">
+      <span style="font-size:1.2rem;">+</span> Мөр нэмэх
+    </button>
+  </div>
+
+  <!-- Totals -->
+  <div class="card">
+    <div class="vat-toggle no-print">
+      <label class="toggle-switch">
+        <input type="checkbox" id="vatToggle" checked onchange="calcTotals()" />
+        <span class="toggle-slider"></span>
+      </label>
+      НӨАТ (10%) тооцох
+    </div>
+    <div class="totals-wrapper">
+      <div class="totals-box">
+        <div class="total-row">
+          <span>Дүн:</span>
+          <span class="tval" id="subtotal">₮0</span>
+        </div>
+        <div class="total-row" id="vatRow">
+          <span>НӨАТ (10%):</span>
+          <span class="tval" id="vatAmount">₮0</span>
+        </div>
+        <div class="total-row grand">
+          <span>Нийт төлөх:</span>
+          <span id="grandTotal">₮0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notes -->
+  <div class="card">
+    <div class="card-title">Тайлбар / Нэмэлт мэдээлэл</div>
+    <textarea class="note-area" id="notes" rows="3"
+      placeholder="Төлбөрийг 14 хоногийн дотор шилжүүлнэ үү. Данс: Khan Bank 5028xxxxxx"></textarea>
+  </div>
+
+</div>
+
+<script>
+  // ── Init ──────────────────────────────────────────────
+  const fmt = n => '₮' + Number(n).toLocaleString('mn-MN');
+
+  function init() {
+    const today = new Date();
+    const due   = new Date(); due.setDate(due.getDate() + 14);
+    document.getElementById('invoiceDate').value = toISO(today);
+    document.getElementById('dueDate').value     = toISO(due);
+    addItem();
+    addItem();
+    updateNum(1);
+    syncStatus();
+  }
+
+  function toISO(d) {
+    return d.toISOString().split('T')[0];
+  }
+
+  // ── Invoice number ─────────────────────────────────────
+  function updateNum(v) {
+    const n = String(v).padStart(4, '0');
+    document.getElementById('invoiceNumDisplay').textContent = '#' + n;
+  }
+
+  // ── Status badge ───────────────────────────────────────
+  document.getElementById('invoiceStatus').addEventListener('change', syncStatus);
+  function syncStatus() {
+    const sel   = document.getElementById('invoiceStatus').value;
+    const badge = document.getElementById('statusBadge');
+    if (sel === 'paid') {
+      badge.textContent = 'Төлсөн';
+      badge.className   = 'status-badge status-paid';
+    } else {
+      badge.textContent = 'Хүлээгдэж байна';
+      badge.className   = 'status-badge status-pending';
+    }
+  }
+
+  // ── Items ──────────────────────────────────────────────
+  let itemCount = 0;
+
+  function addItem() {
+    itemCount++;
+    const id  = itemCount;
+    const div = document.createElement('div');
+    div.className = 'item-row';
+    div.id = 'item-' + id;
+    div.innerHTML = `
+      <input type="text" placeholder="Бараа / үйлчилгээний нэр" />
+      <input type="number" value="1" min="1" style="text-align:center;"
+             oninput="calcRow(${id})" />
+      <input type="number" value="" min="0" placeholder="0"
+             style="text-align:right;" oninput="calcRow(${id})" />
+      <div class="item-total" id="row-total-${id}">₮0</div>
+      <button class="remove-btn no-print" onclick="removeItem(${id})" title="Устгах">×</button>
+    `;
+    document.getElementById('itemsContainer').appendChild(div);
+  }
+
+  function removeItem(id) {
+    const el = document.getElementById('item-' + id);
+    if (el) el.remove();
+    calcTotals();
+  }
+
+  function calcRow(id) {
+    const row   = document.getElementById('item-' + id);
+    const inputs = row.querySelectorAll('input[type="number"]');
+    const qty   = parseFloat(inputs[0].value) || 0;
+    const price = parseFloat(inputs[1].value) || 0;
+    const total = qty * price;
+    document.getElementById('row-total-' + id).textContent = fmt(total);
+    calcTotals();
+  }
+
+  function calcTotals() {
+    let sub = 0;
+    document.querySelectorAll('.item-row').forEach(row => {
+      const inputs = row.querySelectorAll('input[type="number"]');
+      const qty   = parseFloat(inputs[0].value) || 0;
+      const price = parseFloat(inputs[1].value) || 0;
+      sub += qty * price;
+    });
+    const useVat = document.getElementById('vatToggle').checked;
+    const vat    = useVat ? sub * 0.1 : 0;
+    document.getElementById('vatRow').style.display = useVat ? '' : 'none';
+    document.getElementById('subtotal').textContent  = fmt(sub);
+    document.getElementById('vatAmount').textContent = fmt(vat);
+    document.getElementById('grandTotal').textContent = fmt(sub + vat);
+  }
+
+  // ── Reset ──────────────────────────────────────────────
+  function resetForm() {
+    if (!confirm('Шинэ нэхэмжлэх үүсгэх үү? Одоогийн мэдээлэл устана.')) return;
+    document.getElementById('itemsContainer').innerHTML = '';
+    itemCount = 0;
+    ['senderName','senderReg','senderAddress','senderPhone','senderEmail',
+     'receiverName','receiverReg','receiverAddress','receiverPhone','receiverEmail','notes']
+      .forEach(id => document.getElementById(id).value = '');
+    const newNum = parseInt(document.getElementById('invoiceNum').value || 1) + 1;
+    document.getElementById('invoiceNum').value = newNum;
+    init();
+  }
+
+  // ── PDF (print-to-PDF) ─────────────────────────────────
+  function savePDF() {
+    alert('Хэвлэх цонх нээгдэнэ. "PDF болгон хадгалах" сонголтыг ашиглана уу.');
+    window.print();
+  }
+
+  // ── Start ──────────────────────────────────────────────
+  init();
+</script>
+</body>
+</html>

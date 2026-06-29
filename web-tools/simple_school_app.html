@@ -1,0 +1,581 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --red: #C0392B;
+    --red-dark: #922B21;
+    --red-light: #F9EBEA;
+    --black: #1a1a1a;
+    --white: #ffffff;
+    --gray-light: #F4F4F4;
+    --gray-mid: #CCCCCC;
+    --gray-text: #555;
+    --font: 'Georgia', serif;
+    --mono: monospace;
+  }
+  body { font-family: var(--font); background: var(--gray-light); }
+
+  #app { min-height: 600px; background: var(--gray-light); }
+
+  /* LOGIN */
+  #login-screen {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 600px; background: var(--black); padding: 2rem;
+  }
+  .logo-box {
+    text-align: center; margin-bottom: 2.5rem;
+  }
+  .logo-box .logo-title {
+    font-size: 42px; font-weight: 700; color: var(--white); letter-spacing: 6px; text-transform: uppercase;
+  }
+  .logo-box .logo-sub {
+    font-size: 13px; color: var(--gray-mid); letter-spacing: 3px; margin-top: 4px;
+  }
+  .login-card {
+    background: var(--white); border-radius: 4px; padding: 2rem; width: 100%; max-width: 360px;
+    border-top: 4px solid var(--red);
+  }
+  .login-card h2 { font-size: 16px; color: var(--black); margin-bottom: 1.5rem; font-weight: 600; letter-spacing: 1px; }
+  .role-tabs { display: flex; gap: 4px; margin-bottom: 1.2rem; }
+  .role-tab {
+    flex: 1; padding: 8px; border: 1px solid var(--gray-mid); background: var(--white);
+    font-size: 12px; cursor: pointer; border-radius: 2px; color: var(--gray-text); letter-spacing: 1px;
+    transition: all 0.15s;
+  }
+  .role-tab.active { background: var(--red); color: var(--white); border-color: var(--red); }
+  .login-input {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--gray-mid); border-radius: 2px;
+    font-size: 14px; margin-bottom: 12px; font-family: var(--mono); letter-spacing: 2px;
+    outline: none;
+  }
+  .login-input:focus { border-color: var(--red); }
+  .login-btn {
+    width: 100%; padding: 11px; background: var(--red); color: var(--white); border: none;
+    border-radius: 2px; font-size: 14px; cursor: pointer; letter-spacing: 2px; font-weight: 600;
+    transition: background 0.15s;
+  }
+  .login-btn:hover { background: var(--red-dark); }
+  .login-hint { font-size: 11px; color: var(--gray-mid); margin-top: 12px; text-align: center; line-height: 1.6; }
+
+  /* MAIN LAYOUT */
+  #main-screen { display: none; flex-direction: column; min-height: 600px; }
+  .topbar {
+    background: var(--black); color: var(--white); padding: 0 1.2rem;
+    display: flex; align-items: center; justify-content: space-between; height: 52px;
+  }
+  .topbar-title { font-size: 20px; letter-spacing: 4px; font-weight: 700; color: var(--white); }
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .user-badge {
+    font-size: 12px; color: var(--gray-mid); letter-spacing: 1px;
+  }
+  .logout-btn {
+    background: var(--red); color: var(--white); border: none; padding: 5px 12px;
+    border-radius: 2px; font-size: 11px; cursor: pointer; letter-spacing: 1px;
+  }
+
+  .nav-bar {
+    background: var(--white); border-bottom: 2px solid var(--red-light);
+    display: flex; overflow-x: auto; padding: 0 1rem;
+  }
+  .nav-item {
+    padding: 12px 16px; font-size: 12px; letter-spacing: 1px; color: var(--gray-text);
+    cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px;
+    white-space: nowrap; transition: all 0.15s;
+  }
+  .nav-item.active { color: var(--red); border-bottom-color: var(--red); font-weight: 600; }
+  .nav-item:hover { color: var(--red); }
+
+  .content { padding: 1.5rem 1.2rem; flex: 1; }
+
+  /* CARDS */
+  .card {
+    background: var(--white); border-radius: 3px; padding: 1.2rem;
+    border: 1px solid #E8E8E8; margin-bottom: 1rem;
+  }
+  .card-title {
+    font-size: 11px; letter-spacing: 2px; color: var(--red); font-weight: 700;
+    text-transform: uppercase; margin-bottom: 1rem; border-bottom: 1px solid var(--red-light);
+    padding-bottom: 8px;
+  }
+
+  /* STAT GRID */
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 1.2rem; }
+  .stat-box {
+    background: var(--black); border-radius: 3px; padding: 1rem; text-align: center;
+  }
+  .stat-num { font-size: 28px; font-weight: 700; color: var(--white); }
+  .stat-label { font-size: 10px; color: var(--gray-mid); letter-spacing: 2px; margin-top: 4px; }
+  .stat-box.red { background: var(--red); }
+
+  /* TABLE */
+  .tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .tbl th { background: var(--black); color: var(--white); padding: 8px 10px; text-align: left; font-size: 11px; letter-spacing: 1px; }
+  .tbl td { padding: 8px 10px; border-bottom: 1px solid #F0F0F0; color: var(--black); }
+  .tbl tr:last-child td { border-bottom: none; }
+  .tbl tr:hover td { background: var(--red-light); }
+
+  /* BADGE */
+  .badge {
+    display: inline-block; padding: 3px 8px; border-radius: 2px; font-size: 11px;
+    letter-spacing: 1px; font-weight: 600;
+  }
+  .badge-green { background: #E8F5E9; color: #2E7D32; }
+  .badge-red { background: var(--red-light); color: var(--red); }
+  .badge-gray { background: #F5F5F5; color: #555; }
+  .badge-blue { background: #E3F2FD; color: #1565C0; }
+
+  /* ATTENDANCE */
+  .att-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .att-student {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 12px; border: 1px solid #ECECEC; border-radius: 3px; background: var(--white);
+  }
+  .att-name { font-size: 13px; color: var(--black); }
+  .att-id { font-size: 11px; color: var(--gray-text); font-family: var(--mono); }
+  .att-toggle {
+    display: flex; gap: 4px;
+  }
+  .att-btn {
+    padding: 4px 8px; border: 1px solid; border-radius: 2px; font-size: 11px; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .att-btn.present { background: #2E7D32; color: white; border-color: #2E7D32; }
+  .att-btn.absent { background: var(--red); color: white; border-color: var(--red); }
+  .att-btn.inactive { background: white; color: var(--gray-text); border-color: var(--gray-mid); }
+
+  /* GRADE INPUT */
+  .grade-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .grade-row label { font-size: 13px; color: var(--black); flex: 1; }
+  .grade-input {
+    width: 70px; padding: 6px 8px; border: 1px solid var(--gray-mid); border-radius: 2px;
+    font-size: 14px; text-align: center; font-family: var(--mono);
+  }
+  .grade-input:focus { outline: none; border-color: var(--red); }
+  .save-btn {
+    background: var(--red); color: white; border: none; padding: 8px 20px;
+    border-radius: 2px; cursor: pointer; font-size: 13px; letter-spacing: 1px; margin-top: 8px;
+  }
+  .save-btn:hover { background: var(--red-dark); }
+
+  /* AI CHAT */
+  .chat-box {
+    background: var(--white); border: 1px solid #E8E8E8; border-radius: 3px;
+    height: 280px; overflow-y: auto; padding: 1rem; margin-bottom: 12px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .msg { max-width: 85%; padding: 10px 13px; border-radius: 3px; font-size: 13px; line-height: 1.5; }
+  .msg.user { background: var(--black); color: white; align-self: flex-end; }
+  .msg.ai { background: var(--red-light); color: var(--black); align-self: flex-start; border-left: 3px solid var(--red); }
+  .msg.ai.loading { color: var(--gray-text); font-style: italic; }
+  .chat-input-row { display: flex; gap: 8px; }
+  .chat-input {
+    flex: 1; padding: 10px 12px; border: 1px solid var(--gray-mid); border-radius: 2px;
+    font-size: 13px; outline: none;
+  }
+  .chat-input:focus { border-color: var(--red); }
+  .chat-send {
+    background: var(--red); color: white; border: none; padding: 10px 16px;
+    border-radius: 2px; cursor: pointer; font-size: 13px; letter-spacing: 1px;
+  }
+
+  /* NOTIFICATION */
+  .notif {
+    padding: 12px 14px; border-radius: 3px; margin-bottom: 8px;
+    border-left: 4px solid var(--red); background: var(--red-light); font-size: 13px;
+  }
+  .notif-time { font-size: 11px; color: var(--gray-text); margin-top: 4px; font-family: var(--mono); }
+
+  /* SUMMARY SECTION */
+  .progress-bar-wrap { background: #F0F0F0; border-radius: 2px; height: 8px; margin-top: 4px; }
+  .progress-bar { height: 8px; border-radius: 2px; background: var(--red); }
+  .progress-bar.green { background: #2E7D32; }
+</style>
+
+<div id="app">
+  <!-- LOGIN -->
+  <div id="login-screen">
+    <div class="logo-box">
+      <div class="logo-title">SIMPLE</div>
+      <div class="logo-sub">Сургуулийн удирдлагын систем</div>
+    </div>
+    <div class="login-card">
+      <h2>Нэвтрэх</h2>
+      <div class="role-tabs">
+        <button class="role-tab active" onclick="selectRole('student')">Суралцагч</button>
+        <button class="role-tab" onclick="selectRole('teacher')">Багш</button>
+        <button class="role-tab" onclick="selectRole('parent')">Эцэг эх</button>
+      </div>
+      <input class="login-input" id="login-id" type="text" placeholder="Бүртгэлийн дугаар" maxlength="8" />
+      <input class="login-input" id="login-pass" type="password" placeholder="Нууц үг" />
+      <button class="login-btn" onclick="doLogin()">НЭВТРЭХ</button>
+      <div class="login-hint">
+        Суралцагч: S001 / 1234 &nbsp;|&nbsp; Багш: T001 / admin<br>
+        Эцэг эх: P001 / parent
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div id="main-screen">
+    <div class="topbar">
+      <div class="topbar-title">SIMPLE</div>
+      <div class="topbar-right">
+        <span class="user-badge" id="user-badge"></span>
+        <button class="logout-btn" onclick="doLogout()">ГАРАХ</button>
+      </div>
+    </div>
+    <div class="nav-bar" id="nav-bar"></div>
+    <div class="content" id="page-content"></div>
+  </div>
+</div>
+
+<script>
+const USERS = {
+  student: { id: 'S001', pass: '1234', name: 'Болд Дорж', class: '10А', role: 'student' },
+  teacher: { id: 'T001', pass: 'admin', name: 'Н.Сарантуяа', role: 'teacher' },
+  parent: { id: 'P001', pass: 'parent', name: 'Д.Энхтуяа (эцэг эх)', role: 'parent' }
+};
+
+const STUDENTS = [
+  { id: 'S001', name: 'Болд Дорж', class: '10А' },
+  { id: 'S002', name: 'Нарантуяа', class: '10А' },
+  { id: 'S003', name: 'Ганбаатар', class: '10А' },
+  { id: 'S004', name: 'Солонго', class: '10А' },
+  { id: 'S005', name: 'Тэмүүжин', class: '10А' },
+  { id: 'S006', name: 'Оюунаа', class: '10А' },
+];
+
+const GRADES = {
+  'S001': { math: 92, mongolian: 88, english: 76, physics: 85, history: 90 },
+  'S002': { math: 78, mongolian: 94, english: 88, physics: 70, history: 82 },
+  'S003': { math: 85, mongolian: 72, english: 65, physics: 90, history: 78 },
+};
+
+const ATTENDANCE = {
+  'S001': { present: 42, absent: 3, total: 45 },
+  'S002': { present: 44, absent: 1, total: 45 },
+  'S003': { present: 38, absent: 7, total: 45 },
+};
+
+let currentRole = 'student';
+let currentUser = null;
+let attendanceState = {};
+STUDENTS.forEach(s => attendanceState[s.id] = null);
+
+let currentTab = '';
+let chatHistory = [{ role: 'assistant', content: 'Сайн байна уу! Би SIMPLE системийн туслах AI байна. Сурагчдын ирц, дүн, сургуулийн асуудлаар асуух зүйлс байвал надад хэлнэ үү.' }];
+
+function selectRole(r) {
+  currentRole = r;
+  document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('login-id').placeholder = r === 'student' ? 'Бүртгэлийн дугаар (S001)' : r === 'teacher' ? 'Багшийн дугаар (T001)' : 'Эцэг эхийн дугаар (P001)';
+}
+
+function doLogin() {
+  const id = document.getElementById('login-id').value.trim().toUpperCase();
+  const pass = document.getElementById('login-pass').value;
+  const u = USERS[currentRole];
+  if (id === u.id && pass === u.pass) {
+    currentUser = { ...u };
+    showMain();
+  } else {
+    document.getElementById('login-id').style.borderColor = '#C0392B';
+    setTimeout(() => document.getElementById('login-id').style.borderColor = '', 1000);
+  }
+}
+
+function doLogout() {
+  currentUser = null;
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('main-screen').style.display = 'none';
+}
+
+function showMain() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('main-screen').style.display = 'flex';
+  document.getElementById('user-badge').textContent = currentUser.name;
+
+  const navBar = document.getElementById('nav-bar');
+  const tabs = getTabs();
+  navBar.innerHTML = tabs.map(t => `<div class="nav-item" onclick="showTab('${t.id}')">${t.label}</div>`).join('');
+  showTab(tabs[0].id);
+}
+
+function getTabs() {
+  if (currentUser.role === 'student') return [
+    { id: 'dashboard', label: 'НҮҮР' },
+    { id: 'grades', label: 'ДҮНГҮҮД' },
+    { id: 'attendance', label: 'ИРЦИЙН ТАЙЛАН' },
+    { id: 'assistant', label: 'AI ТУСЛАХ' },
+  ];
+  if (currentUser.role === 'teacher') return [
+    { id: 'dashboard', label: 'НҮҮР' },
+    { id: 'mark-attendance', label: 'ИРЦ БҮРТГЭХ' },
+    { id: 'enter-grades', label: 'ДҮН ОРУУЛАХ' },
+    { id: 'assistant', label: 'AI ТУСЛАХ' },
+  ];
+  if (currentUser.role === 'parent') return [
+    { id: 'dashboard', label: 'НҮҮР' },
+    { id: 'child-grades', label: 'ХҮҮХДИЙН ДҮН' },
+    { id: 'notifications', label: 'МЭДЭГДЛҮҮД' },
+    { id: 'assistant', label: 'AI ТУСЛАХ' },
+  ];
+}
+
+function showTab(id) {
+  currentTab = id;
+  document.querySelectorAll('.nav-item').forEach(n => {
+    n.classList.toggle('active', n.textContent === getTabs().find(t => t.id === id)?.label);
+  });
+  const c = document.getElementById('page-content');
+  if (id === 'dashboard') c.innerHTML = getDashboard();
+  else if (id === 'grades') c.innerHTML = getStudentGrades();
+  else if (id === 'attendance') c.innerHTML = getAttendanceReport();
+  else if (id === 'mark-attendance') { c.innerHTML = getMarkAttendance(); }
+  else if (id === 'enter-grades') c.innerHTML = getEnterGrades();
+  else if (id === 'child-grades') c.innerHTML = getChildGrades();
+  else if (id === 'notifications') c.innerHTML = getNotifications();
+  else if (id === 'assistant') { c.innerHTML = getAssistant(); renderChat(); }
+}
+
+function getDashboard() {
+  if (currentUser.role === 'student') {
+    const att = ATTENDANCE['S001'];
+    const g = GRADES['S001'];
+    const avg = Math.round(Object.values(g).reduce((a,b)=>a+b,0)/Object.values(g).length);
+    return `
+      <div class="stat-grid">
+        <div class="stat-box"><div class="stat-num">${avg}</div><div class="stat-label">ДУНДАЖ ДҮН</div></div>
+        <div class="stat-box red"><div class="stat-num">${att.present}</div><div class="stat-label">ИРСЭН ӨДӨР</div></div>
+        <div class="stat-box"><div class="stat-num">${att.absent}</div><div class="stat-label">ТАСАЛСАН</div></div>
+        <div class="stat-box"><div class="stat-num">10А</div><div class="stat-label">АНГИ</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Хичээлийн дүнгийн товч</div>
+        ${Object.entries(GRADES['S001']).map(([sub, val]) => `
+          <div style="margin-bottom:10px">
+            <div style="display:flex;justify-content:space-between;font-size:13px">
+              <span>${subjectName(sub)}</span><span style="font-weight:600;color:${val>=90?'#2E7D32':val>=70?'#1565C0':'#C0392B'}">${val}</span>
+            </div>
+            <div class="progress-bar-wrap"><div class="progress-bar ${val>=70?'green':''}" style="width:${val}%"></div></div>
+          </div>
+        `).join('')}
+      </div>`;
+  }
+  if (currentUser.role === 'teacher') {
+    return `
+      <div class="stat-grid">
+        <div class="stat-box"><div class="stat-num">6</div><div class="stat-label">НИЙТ СУРАГЧ</div></div>
+        <div class="stat-box red"><div class="stat-num">5</div><div class="stat-label">ӨНӨӨДӨР ИРСЭН</div></div>
+        <div class="stat-box"><div class="stat-num">1</div><div class="stat-label">ТАСАЛСАН</div></div>
+        <div class="stat-box"><div class="stat-num">10А</div><div class="stat-label">АНГИ</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Сурагчдын жагсаалт</div>
+        <table class="tbl">
+          <tr><th>Дугаар</th><th>Нэр</th><th>Анги</th><th>Ирц</th></tr>
+          ${STUDENTS.map(s => `<tr><td style="font-family:monospace">${s.id}</td><td>${s.name}</td><td>${s.class}</td><td><span class="badge badge-green">Идэвхтэй</span></td></tr>`).join('')}
+        </table>
+      </div>`;
+  }
+  if (currentUser.role === 'parent') {
+    const g = GRADES['S001'];
+    const avg = Math.round(Object.values(g).reduce((a,b)=>a+b,0)/Object.values(g).length);
+    const att = ATTENDANCE['S001'];
+    return `
+      <div style="margin-bottom:1rem">
+        <div style="font-size:11px;letter-spacing:2px;color:#555;margin-bottom:4px">ХҮҮХЭД</div>
+        <div style="font-size:18px;font-weight:600;color:#1a1a1a">Болд Дорж — 10А анги</div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-box"><div class="stat-num">${avg}</div><div class="stat-label">ДУНДАЖ ДҮН</div></div>
+        <div class="stat-box red"><div class="stat-num">${Math.round(att.present/att.total*100)}%</div><div class="stat-label">ИРЦИЙН ХУВЬ</div></div>
+        <div class="stat-box"><div class="stat-num">3</div><div class="stat-label">ШИНЭ МЭДЭГДЭЛ</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Сүүлийн мэдэгдлүүд</div>
+        <div class="notif">Математикийн шалгалт маргааш болно — бэлдэх шаардлагатай.<div class="notif-time">2025-04-28 09:00</div></div>
+        <div class="notif">Болд Дорж өнөөдөр Англи хэлний хичээлд ирсэнгүй.<div class="notif-time">2025-04-27 08:30</div></div>
+      </div>`;
+  }
+}
+
+function subjectName(s) {
+  return { math: 'Математик', mongolian: 'Монгол хэл', english: 'Англи хэл', physics: 'Физик', history: 'Түүх' }[s] || s;
+}
+
+function getStudentGrades() {
+  const g = GRADES['S001'];
+  return `
+    <div class="card">
+      <div class="card-title">Миний дүнгүүд — 2024-2025 хичээлийн жил</div>
+      <table class="tbl">
+        <tr><th>Хичээл</th><th>Дүн</th><th>Үнэлгээ</th><th>Байдал</th></tr>
+        ${Object.entries(g).map(([s,v]) => `
+          <tr>
+            <td>${subjectName(s)}</td>
+            <td style="font-family:monospace;font-weight:600">${v}</td>
+            <td>${v>=90?'A':v>=80?'B':v>=70?'C':v>=60?'D':'F'}</td>
+            <td><span class="badge ${v>=90?'badge-green':v>=70?'badge-blue':'badge-red'}">${v>=90?'Маш сайн':v>=70?'Сайн':'Дунд'}</span></td>
+          </tr>`).join('')}
+      </table>
+    </div>`;
+}
+
+function getAttendanceReport() {
+  const att = ATTENDANCE['S001'];
+  return `
+    <div class="card">
+      <div class="card-title">Ирцийн тайлан</div>
+      <div class="stat-grid" style="margin-bottom:1.2rem">
+        <div class="stat-box"><div class="stat-num">${att.present}</div><div class="stat-label">ИРСЭН</div></div>
+        <div class="stat-box red"><div class="stat-num">${att.absent}</div><div class="stat-label">ТАСАЛСАН</div></div>
+        <div class="stat-box"><div class="stat-num">${Math.round(att.present/att.total*100)}%</div><div class="stat-label">ИРЦИЙН ХУВЬ</div></div>
+      </div>
+      <div>
+        <div style="font-size:13px;margin-bottom:6px;color:#555">Ирцийн хувь</div>
+        <div class="progress-bar-wrap" style="height:12px"><div class="progress-bar green" style="width:${Math.round(att.present/att.total*100)}%;height:12px"></div></div>
+      </div>
+    </div>`;
+}
+
+function getMarkAttendance() {
+  return `
+    <div class="card">
+      <div class="card-title">Өнөөдрийн ирц бүртгэл — 10А анги</div>
+      <div class="att-grid" id="att-grid">
+        ${STUDENTS.map(s => `
+          <div class="att-student">
+            <div>
+              <div class="att-name">${s.name}</div>
+              <div class="att-id">${s.id}</div>
+            </div>
+            <div class="att-toggle">
+              <button class="att-btn inactive" id="btn-p-${s.id}" onclick="markAtt('${s.id}','present')">Ирсэн</button>
+              <button class="att-btn inactive" id="btn-a-${s.id}" onclick="markAtt('${s.id}','absent')">Тасалсан</button>
+            </div>
+          </div>`).join('')}
+      </div>
+      <button class="save-btn" onclick="saveAttendance()" style="margin-top:1rem">ХАДГАЛАХ</button>
+    </div>`;
+}
+
+function markAtt(id, status) {
+  attendanceState[id] = status;
+  const bp = document.getElementById(`btn-p-${id}`);
+  const ba = document.getElementById(`btn-a-${id}`);
+  bp.className = 'att-btn ' + (status === 'present' ? 'present' : 'inactive');
+  ba.className = 'att-btn ' + (status === 'absent' ? 'absent' : 'inactive');
+}
+
+function saveAttendance() {
+  const total = Object.values(attendanceState).filter(v => v !== null).length;
+  if (total < STUDENTS.length) { alert(`${STUDENTS.length - total} сурагчийн ирц бүртгэгдээгүй байна.`); return; }
+  alert('Ирц амжилттай хадгалагдлаа!');
+}
+
+function getEnterGrades() {
+  return `
+    <div class="card">
+      <div class="card-title">Дүн оруулах — Болд Дорж (S001)</div>
+      ${Object.entries(GRADES['S001']).map(([s,v]) => `
+        <div class="grade-row">
+          <label>${subjectName(s)}</label>
+          <input class="grade-input" id="grade-${s}" type="number" value="${v}" min="0" max="100" />
+        </div>`).join('')}
+      <button class="save-btn" onclick="saveGrades()">ХАДГАЛАХ</button>
+    </div>`;
+}
+
+function saveGrades() {
+  Object.keys(GRADES['S001']).forEach(s => {
+    const v = parseInt(document.getElementById(`grade-${s}`).value);
+    if (!isNaN(v)) GRADES['S001'][s] = Math.min(100, Math.max(0, v));
+  });
+  alert('Дүн амжилттай хадгалагдлаа!');
+}
+
+function getChildGrades() { return getStudentGrades(); }
+
+function getNotifications() {
+  return `
+    <div class="card">
+      <div class="card-title">Мэдэгдлүүд</div>
+      <div class="notif">
+        <strong>Математикийн шалгалт</strong><br>
+        Болд Дорж маргааш математикийн улирлын шалгалтад орно. Бэлдэх шаардлагатай.
+        <div class="notif-time">2025-04-28 — Н.Сарантуяа багш</div>
+      </div>
+      <div class="notif">
+        <strong>Ирц анхааруулга</strong><br>
+        Болд Дорж өнөөдрийн Англи хэлний хичээлд оролцоогүй байна.
+        <div class="notif-time">2025-04-27 08:30</div>
+      </div>
+      <div class="notif">
+        <strong>Физикийн лабораторийн ажил</strong><br>
+        Ирэх долоо хоногт лабораторийн ажил байх тул дугтуй, дэвтэр авчрах хэрэгтэй.
+        <div class="notif-time">2025-04-25 14:00</div>
+      </div>
+    </div>`;
+}
+
+function getAssistant() {
+  return `
+    <div class="card">
+      <div class="card-title">AI туслах — SIMPLE Assistant</div>
+      <div class="chat-box" id="chat-box"></div>
+      <div class="chat-input-row">
+        <input class="chat-input" id="chat-input" type="text" placeholder="Асуултаа бичнэ үү..." onkeydown="if(event.key==='Enter')sendChat()" />
+        <button class="chat-send" onclick="sendChat()">ИЛГЭЭХ</button>
+      </div>
+    </div>`;
+}
+
+function renderChat() {
+  const box = document.getElementById('chat-box');
+  if (!box) return;
+  box.innerHTML = chatHistory.map(m => `<div class="msg ${m.role === 'user' ? 'user' : 'ai'}">${m.content}</div>`).join('');
+  box.scrollTop = box.scrollHeight;
+}
+
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  chatHistory.push({ role: 'user', content: text });
+  renderChat();
+
+  const box = document.getElementById('chat-box');
+  const loader = document.createElement('div');
+  loader.className = 'msg ai loading';
+  loader.textContent = 'Бодож байна...';
+  box.appendChild(loader);
+  box.scrollTop = box.scrollHeight;
+
+  try {
+    const sysPrompt = `Чи SIMPLE сургуулийн удирдлагын системийн AI туслах байна. Монгол хэлээр богино, тодорхой хариулт өг. Ирц, дүн, сургуулийн бодлого, хичээлийн зөвлөгөө өг. Хэт урт бичихгүй.`;
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: sysPrompt,
+        messages: chatHistory
+      })
+    });
+    const data = await res.json();
+    const reply = data.content?.map(b => b.text || '').join('') || 'Уучлаарай, хариулж чадсангүй.';
+    chatHistory.push({ role: 'assistant', content: reply });
+  } catch(e) {
+    chatHistory.push({ role: 'assistant', content: 'Алдаа гарлаа. Дахин оролдоно уу.' });
+  }
+  renderChat();
+}
+</script>
+claude-sonnet-4-20250514 
+--gray-mid 
+--black
+--
